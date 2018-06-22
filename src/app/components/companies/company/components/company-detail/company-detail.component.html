@@ -1,0 +1,368 @@
+<section class="padding-top">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-6 toppad">
+        <div class="panel">
+          <div class="panel-heading">
+            <h3 class="panel-title">&nbsp;
+              <i class="fa pull-right" [class.fa-edit]="!edit" [class.fa-long-arrow-left]="edit" (click)="editBack()"></i>
+            </h3>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class=" col-md-12 col-lg-12 ">
+                <table class="table table-user-information">
+                  <tbody>
+                    <tr *ngIf="company?.parent_company">
+                      <td>Parent Company:</td>
+                      <td>
+                        <a href="javascript:void(0)" (click)="navigateToCompany(company?.parent_company)">
+                          {{company?.parent_company}}
+                        </a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Name:</td>
+                      <td *ngIf="!edit">
+                        {{company?.name}} <span *ngIf="!company?.parent_company"> (Parent Company)</span>
+                      </td>
+                      <td *ngIf="edit">
+                        <input type="text" class="form-control" id="comp_name" [(ngModel)]="editCompany.name"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Sub-domain:</td>
+                      <td *ngIf="!edit">{{company?.sub_domain}}</td>
+                      <td *ngIf="edit">
+                        <input type="text" class="form-control" id="comp_sub_domain" [(ngModel)]="editCompany.sub_domain"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Created At:</td>
+                      <td>{{company?.createdAt}}</td>
+                    </tr>
+                    <tr>
+                      <td>Admin Created</td>
+                      <td *ngIf="!edit">{{company?.is_admin_created}}</td>
+                      <td *ngIf="edit">
+                        <div class="i-checks">
+                          <input type="checkbox" id="comp_is_admin_created" class="checkbox-template" [(ngModel)]="editCompany.is_admin_created">
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Agency:</td>
+                      <td *ngIf="!edit">{{company?.agency}}</td>
+                      <td *ngIf="edit">
+                        <div class="i-checks">
+                          <input type="checkbox" id="comp_is_agency" class="checkbox-template" [(ngModel)]="editCompany.agency">
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>GDPR:</td>
+                      <td *ngIf="!edit">{{company?.GDPR}}</td>
+                      <td *ngIf="edit">
+                        <div class="i-checks">
+                          <input type="checkbox" id="comp_GDPR" class="checkbox-template" [(ngModel)]="editCompany.GDPR">
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Campaign:</td>
+                      <td>{{company?.campaign ? company?.campaign : 'REGULAR'}}</td>
+                    </tr>
+                    <tr>
+                      <td>Allow Referral:</td>
+                      <td *ngIf="!edit">{{company?.referral.is_referralcandy_visible}}</td>
+                      <td *ngIf="edit">
+                        <div class="i-checks">
+                          <input type="checkbox" id="comp_is_referralcandy_visible" class="checkbox-template" [(ngModel)]="editCompany.referral.is_referralcandy_visible">
+                        </div>
+                      </td>
+                    </tr>
+                    <tr *ngIf="!edit">
+                      <td>Current Referral Program:</td>
+                      <td>{{company?.current_referral_program}}</td>
+                    </tr>
+                    <tr *ngIf="edit">
+                      <td>LeadDyno</td>
+                      <td>
+                        <div class="i-checks">
+                          <input id="comp_leaddyno" type="radio" value="LEADDYNO" name="referralProg" [checked]="editCompany.current_referral_program == 'LEADDYNO'" [(ngModel)]="editCompany.current_referral_program" class="radio-template">
+                        </div>
+                        <small *ngIf="editCompany.current_referral_program == 'LEADDYNO'">Referral URL</small>
+                        <input type="text" class="form-control" id="comp_name" *ngIf="editCompany.current_referral_program == 'LEADDYNO'" [(ngModel)]="editCompany.referral.leaddyno_url"/>
+                      </td>
+                    </tr>
+                    <tr *ngIf="edit">
+                      <td>Referral Candy</td>
+                      <td>
+                        <div class="i-checks">
+                          <input id="comp_referralcandy" type="radio" value="REFERRALCANDY" name="referralProg" [checked]="editCompany.current_referral_program == 'REFERRALCANDY'" [(ngModel)]="editCompany.current_referral_program" class="radio-template">
+                        </div>
+                        <small *ngIf="editCompany.current_referral_program == 'REFERRALCANDY'">Referral URL</small>
+                        <input type="text" class="form-control" id="comp_name" *ngIf="editCompany.current_referral_program == 'REFERRALCANDY'" [(ngModel)]="editCompany.referral.referralcandy_url"/>
+                        <small *ngIf="editCompany.current_referral_program == 'REFERRALCANDY'">Sharing URL</small>
+                        <input type="text" class="form-control" id="comp_name" *ngIf="editCompany.current_referral_program == 'REFERRALCANDY'" [(ngModel)]="editCompany.referral.sharing_url"/>
+                      </td>
+                    </tr>
+                    <tr *ngIf="edit">
+                      <td>GrowSumo</td>
+                      <td>
+                        <div class="i-checks">
+                          <input id="comp_growsumo" type="radio" value="GROWSUMO" name="referralProg" [checked]="editCompany.current_referral_program == 'GROWSUMO'" [(ngModel)]="editCompany.current_referral_program" class="radio-template">
+                        </div>
+                        <small *ngIf="editCompany.current_referral_program == 'GROWSUMO'">Referral URL</small>
+                        <input type="text" class="form-control" id="comp_name" *ngIf="editCompany.current_referral_program == 'GROWSUMO'" [(ngModel)]="editCompany.referral.growsumo_url"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Deal Referred:</td>
+                      <td>{{(company?.deal_refered) ? company?.deal_refered : 'NONE'}}</td>
+                    </tr>
+                    <tr>
+                      <td>Appsumo Created:</td>
+                      <td *ngIf="!edit">{{company?.is_appsumo_created}}</td>
+                      <td *ngIf="edit">
+                        <div class="i-checks">
+                          <input type="checkbox" id="comp_is_appsumo_created" class="checkbox-template" [(ngModel)]="editCompany.is_appsumo_created">
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>API:</td>
+                      <td>{{(company?.api) ? company?.api : 'NONE'}}</td>
+                    </tr>
+                    <tr>
+                      <td>Company Logo</td>
+                      <td *ngIf="!edit">{{companyFeature ? companyFeature['extras']['company_logo']['active'] : false}}</td>
+                      <td *ngIf="edit">
+                        <div class="i-checks">
+                          <input type="checkbox" id="comp_company_logo" class="checkbox-template" [(ngModel)]="companyFeature['extras']['company_logo']['active']">
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>CNAME:</td>
+                      <td>
+                        <ul>
+                          <li>url:
+                            <span *ngIf="!edit">{{(company?.cname.url) ? company?.cname.url : 'NOT SET'}}</span>
+                            <span *ngIf="edit">
+                              <input type="text" class="form-control" id="comp_url" [(ngModel)]="editCompany.cname.url"/>
+                            </span>
+                          </li>
+                          <li>Root url:
+                            <span *ngIf="!edit">{{(company?.cname.root_url) ? company?.cname.error_url : 'NOT SET'}}</span>
+                            <span *ngIf="edit">
+                              <input type="text" class="form-control" id="comp_root_url" [(ngModel)]="editCompany.cname.root_url"/>
+                            </span>
+                          </li>
+                          <li>Error url:
+                            <span *ngIf="!edit">{{(company?.cname.error_url) ? company?.cname.error_url : 'NOT SET'}}</span>
+                            <span *ngIf="edit">
+                              <input type="text" class="form-control" id="comp_error_url" [(ngModel)]="editCompany.cname.error_url"/>
+                            </span>
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Remove leads After Sync</td>
+                      <td *ngIf="!edit">{{company?.remove_leads_after_saving}}</td>
+                      <td *ngIf="edit">
+                        <div class="i-checks">
+                          <input type="checkbox" id="comp_remove_leads_after_saving" class="checkbox-template" [(ngModel)]="editCompany.remove_leads_after_saving">
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Template Club</td>
+                      <td *ngIf="!edit">{{company?.integration}}</td>
+                      <td *ngIf="edit">
+                        <div class="i-checks">
+                          <input type="checkbox" id="comp_integration" class="checkbox-template" [(ngModel)]="editCompany.integration">
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Calculators</td>
+                      <td *ngIf="!edit">{{(company?.current_limit.calculators == -1)? 'UNLIMITED' : company?.current_limit.calculators}}</td>
+                      <td *ngIf="edit">
+                        <input type="text" class="form-control" id="comp_calculators" [(ngModel)]="editCompany.current_limit.calculators"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Users</td>
+                      <td *ngIf="!edit">{{(company?.current_limit.users == -1)? 'UNLIMITED' : company?.current_limit.users}}</td>
+                      <td *ngIf="edit">
+                        <input type="text" class="form-control" id="comp_users" [(ngModel)]="editCompany.current_limit.users"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Companies</td>
+                      <td *ngIf="!edit">{{(company?.current_limit.companies == -1)? 'UNLIMITED' : company?.current_limit.companies}}</td>
+                      <td *ngIf="edit">
+                        <input type="text" class="form-control" id="comp_companies" [(ngModel)]="editCompany.current_limit.companies"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Child Intercom Id</td>
+                      <td *ngIf="!edit">{{(company?.child_intercom_id)? 'UNLIMITED' : 'NOT SET'}}</td>
+                      <td *ngIf="edit">
+                        <input type="text" class="form-control" id="comp_child_intercom_id" [(ngModel)]="editCompany.child_intercom_id"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Chargebee Customer Id</td>
+                      <td *ngIf="!edit">{{company?.billing.chargebee_customer_id}}</td>
+                      <td *ngIf="edit">
+                        <input type="text" class="form-control" id="comp_chargebee_customer_id" [(ngModel)]="editCompany.billing.chargebee_customer_id"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Chargebee Subscription Id</td>
+                      <td *ngIf="!edit">{{company?.billing.chargebee_subscription_id}}</td>
+                      <td *ngIf="edit">
+                        <input type="text" class="form-control" id="comp_chargebee_subscription_id" [(ngModel)]="editCompany.billing.chargebee_subscription_id"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Stripe Customer Id</td>
+                      <td *ngIf="!edit">{{(company?.billing.stripe_customer_id) ? company?.billing.stripe_customer_id : 'NOT SET'}}</td>
+                      <td *ngIf="edit">
+                        <input type="text" class="form-control" id="comp_stripe_customer_id" [(ngModel)]="editCompany.billing.stripe_customer_id"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Chargebee Plan Id</td>
+                      <td *ngIf="!edit">{{company?.billing.chargebee_plan_id}}</td>
+                      <td *ngIf="edit">
+                        <select class="form-control" [(ngModel)]="editCompany.billing.chargebee_plan_id">
+                          <option *ngFor="let item of cbPlanValue" value="{{item.id}}">
+                            {{item.itemName}}
+                          </option>
+                        </select>
+                        <ng-container *ngIf="editCompany.billing.chargebee_plan_id != company.billing.chargebee_plan_id">
+                          *Immediate Change: <div class="i-checks">
+                            <input type="checkbox" id="comp_immediatePlanChange" class="checkbox-template" [(ngModel)]="immediateChange">
+                          </div>
+                        </ng-container>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Non Chargebee Payer</td>
+                      <td *ngIf="!edit">&nbsp;</td>
+                      <td *ngIf="edit">
+                        <div class="i-checks">
+                          <input type="checkbox" id="comp_nonCbPayer" class="checkbox-template">
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="panel-footer text-right">
+            <button id="btn-saveCompany" class="btn btn-primary mb-1 btn-block" (click)="saveCompanyChanges()" *ngIf="edit">Save</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 toppad">
+        <div class="panel">
+          <div class="panel-heading">
+            <h3 class="panel-title">&nbsp;
+            </h3>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class=" col-md-12 col-lg-12 ">
+                <table class="table table-user-information">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Subdomain</th>
+                      <th>&nbsp;</th>
+                    </tr>
+                  </thead>
+                  <tbody *ngIf="childCompanies.length == 0">
+                    <tr>
+                      <th colspan="3" class="text-center">
+                        No Child companies
+                      </th>
+                    </tr>
+                  </tbody>
+                  <tbody *ngIf="childCompanies.length">
+                    <tr *ngFor="let cc of childCompanies">
+                      <td>
+                        <a href="javascript:void(0)" (click)="navigateToCompany(cc._id)">
+                          {{cc?.name}}
+                        </a>
+                      </td>
+                      <td>{{cc?.sub_domain}}</td>
+                      <td>
+                        <ul>
+                          <li>APPROVED: {{cc.APPROVED ? 'YES' : 'NO'}}</li>
+                          <li>INVITED: {{cc.INVITED ? 'YES' : 'NO'}}</li>
+                          <li>LEFT: {{cc.LEFT ? 'YES' : 'NO'}}</li>
+                          <li>DELETED: {{cc.DELETED ? 'YES' : 'NO'}}</li>
+                          <li>REQUESTED: {{cc.REQUESTED ? 'YES' : 'NO'}}</li>
+                        </ul>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="panel-footer">
+          </div>
+        </div>
+        <div class="panel" *ngIf="companyCouponDetail.length">
+          <div class="panel-heading">
+            <h3 class="panel-title">
+              &nbsp;
+            </h3>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class=" col-md-12 col-lg-12 ">
+                <table class="table table-user-information">
+                  <tbody>
+                    <tr *ngFor="let coupon of companyCouponDetail">
+                      <td>{{coupon.code}}</td>
+                      <td>
+                        <a href="javascript:void(0);" data-toggle="modal" data-target="#compCouponDetail" (click)="viewCoupon=coupon">
+                          <i class="fa fa-eye"></i>
+                        </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="panel-footer">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div id="compCouponDetail" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Coupon Detail</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" *ngIf="viewCoupon">
+        <div *ngFor="let key of generateKeys(viewCoupon)">
+          <p><span>{{ key + ' :- ' }}</span> {{viewCoupon[key] | json}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

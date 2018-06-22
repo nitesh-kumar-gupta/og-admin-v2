@@ -1,0 +1,91 @@
+<nav id="sidebar">
+  <div class="sidebar-header d-flex align-items-center">
+    <div class="avatar"><img src="assets/img/avatar-6.jpg" alt="..." class="img-fluid rounded-circle"></div>
+    <div class="title">
+      <h1 class="h5">{{user?.username}}</h1>
+      <p>{{user?.role}}</p>
+    </div>
+  </div>
+  <ul class="list-unstyled">
+    <li routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+      <a href="javascript:void(0)" routerLink="dashboard">
+        <i class="fa fa-dashboard"></i>Dashboard
+      </a>
+    </li>
+    <li>
+      <a href="javascript:void(0)">
+        <i class="fa fa-users"></i>Users
+      </a>
+    </li>
+    <li routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+      <a href="javascript:void(0)" routerLink="companies">
+        <i class="fa fa-industry"></i>Companies
+      </a>
+    </li>
+    <li>
+      <a href="javascript:void(0)">
+        <i class="fa fa-map"></i>Plans
+      </a>
+    </li>
+    <li>
+      <a href="javascript:void(0)">
+        <i class="fa fa-internet-explorer"></i>Sub-Domain
+      </a>
+    </li>
+    <li>
+      <a href="javascript:void(0)">
+        <i class="fa fa-book"></i>Emails / Deals Log
+      </a>
+    </li>
+    <li>
+      <a href="javascript:void(0)">
+        <i class="fa fa-user-o"></i>Leads
+      </a>
+    </li>
+    <li>
+      <a href="javascript:void(0)">
+        <i class="fa fa-stack-overflow"></i>Coupon Codes
+      </a>
+    </li>
+    <li>
+      <a href="javascript:void(0)">
+        <i class="fa fa-stack-overflow"></i>Special Coupon Codes
+      </a>
+    </li>
+    <li>
+      <a href="javascript:void(0)">
+        <i class="fa fa-chain-broken"></i>Error Logs
+      </a>
+    </li>
+    <li>
+      <a href="javascript:void(0)">
+        <i class="fa fa-info"></i>Hellobar
+      </a>
+    </li>
+    <li>
+      <a href="javascript:void(0)">
+        <i class="fa fa-language"></i>Locales
+      </a>
+    </li>
+    <li>
+      <a href="javascript:void(0)">
+        <i class="fa fa-list-alt"></i>Promotional Checklist
+      </a>
+    </li>
+    <li>
+      <a href="javascript:void(0)">
+        <i class="fa fa-link"></i>Integrations
+      </a>
+    </li>
+    <li>
+      <a href="javascript:void(0)">
+        <i class="fa fa-tags"></i>Premades
+      </a>
+    </li>
+    <li>
+      <a href="javascript:void(0)">
+        <i class="fa fa-archive"></i>Handling Cache
+      </a>
+    </li>
+  </ul>
+</nav>

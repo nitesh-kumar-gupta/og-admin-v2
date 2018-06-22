@@ -1,0 +1,145 @@
+<div class="page-header">
+  <div class="container-fluid">
+    <h2 class="h5 no-margin-bottom">Companies</h2>
+  </div>
+</div>
+<section class="no-padding-bottom">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <button class="btn" (click)="showFilters()">
+          <i class="fa fa-filter"></i>{{showFilter ? 'Hide Filter' : 'Show Filter' }}
+        </button>
+      </div>
+      <div class="col-lg-12 block mt-1" *ngIf="showFilter">
+        <div class="row mb-1" *ngFor="let condition of conditions; let i = index">
+          <div class="col-lg-1">
+            <button class="btn btn-danger btn-xs" (click)="removeCondition(i)" [disabled]="conditions.length == 1">
+              <i class="fa fa-minus"></i>
+            </button>
+          </div>
+          <div class="col-lg-3">
+            <select class="form-control" [(ngModel)]="condition.selected_field" (change)="condition.stringValue = ''; condition.multiSelectSelected = []; initDatePcker(i)">
+              <optgroup label="Company">
+                <option *ngFor="let compField of condition.fields.company" value="{{compField.value}}">{{compField.name}}</option>
+              </optgroup>
+              <optgroup label="Subscription">
+                <option *ngFor="let subsField of condition.fields.subscription" value="{{subsField.value}}">{{subsField.name}}</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="col-lg-3">
+            <select class="form-control" [(ngModel)]="condition.selected_operator" (change)="initDatePcker(i)">
+              <option *ngFor="let operator of condition.operators[condition.selected_field]; let i = index" value="{{operator}}">{{operator}}</option>
+            </select>
+          </div>
+          <div class="col-lg-3">
+            <input type="text" *ngIf="['name', 'sub_domain', 'cname.url', 'billing.chargebee_subscription_id', 'billing.chargebee_customer_id'].includes(condition.selected_field)" class="form-control" [(ngModel)]="condition.stringValue"/>
+            <angular2-multiselect
+              *ngIf="['deal_refered', 'current_referral_program', 'parent_company', 'is_admin_created', 'agency', 'remove_leads_after_saving', 'GDPR', 'billing.chargebee_plan_id', 'billing.chargebee_subscription_status', 'billing.customer_card_status', 'previousPlan.plan_id', 'previousPlan.subscription_status'].includes(condition.selected_field) && ['includes', 'does not include'].includes(condition.selected_operator)"
+              [data]="condition.multiselectItems[condition.selected_field]"
+              [(ngModel)]="condition.multiSelectSelected"
+              [settings]="multiSelectSettings">
+            </angular2-multiselect>
+            <select class="form-control" [(ngModel)]="condition.stringValue" *ngIf="['deal_refered', 'current_referral_program', 'parent_company', 'is_admin_created', 'agency', 'remove_leads_after_saving', 'GDPR', 'billing.chargebee_plan_id', 'billing.chargebee_subscription_status', 'billing.customer_card_status', 'previousPlan.plan_id', 'previousPlan.subscription_status'].includes(condition.selected_field) && !['includes', 'does not include'].includes(condition.selected_operator)">
+              <option *ngFor="let item of condition.multiselectItems[condition.selected_field]" value="{{item.id}}">
+                {{item.itemName}}
+              </option>
+            </select>
+            <input type="text" *ngIf="['current_limit.users', 'current_limit.companies', 'current_limit.calculators', 'createdAt', 'subscription_updated'].includes(condition.selected_field)" class="form-control {{'dpkr_' + i}}" [(ngModel)]="condition.numberValue.value1"/>
+          </div>
+          <div class="col-md-2">
+            <input type="text" *ngIf="condition.selected_operator == 'between' && ['current_limit.users', 'current_limit.companies', 'current_limit.calculators'].includes(condition.selected_field)" class="form-control" [(ngModel)]="condition.numberValue.value2"/>
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col-lg-1">
+            <button class="btn btn-default btn-xs" (click)="addCondition()">
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+          <div class="col-lg-11">
+            <button class="btn btn-success" (click)="applyFilter()">
+              Apply Filter
+            </button>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-lg-12">
+        <div class="text-right">
+            Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit) > totalCompanies)? totalCompanies : current_page * current_limit}} of {{totalCompanies}}
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getCompanies()">
+                <i class="fa fa-angle-left"></i>
+              </button>
+              <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getCompanies()">
+                <i class="fa fa-angle-right"></i>
+              </button>
+            </div>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="block row">
+          <div class="table-responsive">
+
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Sub Domain</th>
+                  <th>Current Plan</th>
+                  <th>Parent Company</th>
+                  <th>Created At</th>
+                  <th scope="row">Edit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngIf="!loadingCompanies">
+                  <tr *ngFor="let company of companies">
+                    <td>{{company.name}}</td>
+                    <td>{{company.sub_domain}}</td>
+                    <td>{{company.billing.chargebee_plan_id}}</td>
+                    <td>{{company.parent_company ? company.parent_company : 'None'}}</td>
+                    <td>{{company.createdAt}}</td>
+                    <th scope="row">
+                      <a routerLink="{{'/admin/company/' + company.id}}">
+                        <i class="fa fa-eye"></i>
+                      </a>
+                    </th>
+                  </tr>
+                </ng-container>
+                <ng-container *ngIf="!loadingCompanies && totalCompanies == 0">
+                  <tr>
+                    <th colspan="6" scope="row" class="text-center">
+                      No record found
+                    </th>
+                  </tr>
+                </ng-container>
+                <ng-container *ngIf="loadingCompanies">
+                  <tr>
+                    <th colspan="6" scope="row" class="text-center"><i class="fa fa-spinner fa-5x fa-spin"></i></th>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="text-right">
+          Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit) > totalCompanies)? totalCompanies : current_page * current_limit}} of {{totalCompanies}}
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getCompanies()">
+                <i class="fa fa-angle-left"></i>
+              </button>
+              <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getCompanies()">
+                <i class="fa fa-angle-right"></i>
+              </button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

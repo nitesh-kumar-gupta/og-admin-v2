@@ -1,0 +1,21 @@
+/* You can add global styles to this file, and also import other style files */
+.hide {
+    display: none;
+}
+.invalid-feedback {
+    display: block;
+}
+.well {
+    background-color: #b3e5fc;
+    border-radius: 5px;
+    padding: 5px 5px;
+}
+angular2-multiselect {
+    padding: 0px !important;
+}
+angular2-multiselect .c-btn {
+    background: transparent !important;
+    border: none !important;
+    color: inherit !important;
+    box-shadow: none !important;
+}

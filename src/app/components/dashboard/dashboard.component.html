@@ -1,0 +1,116 @@
+<div class="page-header">
+  <div class="container-fluid">
+    <h2 class="h5 no-margin-bottom">Dashboard</h2>
+  </div>
+</div>
+<section class="no-padding-top no-padding-bottom">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-4 col-sm-12">
+        <div class="statistic-block block">
+          <div class="progress-details d-flex align-items-end justify-content-between">
+            <div class="title">
+              <div class="icon"><i class="fa fa-users"></i></div><strong>Users</strong>
+            </div>
+            <div class="number dashtext-1">
+              <ng-container *ngIf="graphData">
+                {{graphData.totalCount.users}}
+              </ng-container>
+              <ng-container *ngIf="!graphData">
+                <i class="fa fa-spinner fa-spin"></i>    
+              </ng-container>
+            </div>
+          </div>
+          <div class="progress progress-template">
+            <div role="progressbar" style="width: 100%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar-template dashbg-1"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-12">
+        <div class="statistic-block block">
+          <div class="progress-details d-flex align-items-end justify-content-between">
+            <div class="title">
+              <div class="icon"><i class="fa fa-industry"></i></div><strong>Companies</strong>
+            </div>
+            <div class="number dashtext-2">
+              <ng-container *ngIf="graphData">
+                {{graphData.totalCount.companies}}
+              </ng-container>
+              <ng-container *ngIf="!graphData">
+                <i class="fa fa-spinner fa-spin"></i>    
+              </ng-container>
+            </div>
+          </div>
+          <div class="progress progress-template">
+            <div role="progressbar" style="width: 100%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar-template dashbg-2"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-12">
+        <div class="statistic-block block">
+          <div class="progress-details d-flex align-items-end justify-content-between">
+            <div class="title">
+              <div class="icon"><i class="fa fa-flask"></i></div><strong>Content Pieces</strong>
+            </div>
+            <div class="number dashtext-3">
+              <ng-container *ngIf="graphData">
+                {{graphData.totalCount.apps}}
+              </ng-container>
+              <ng-container *ngIf="!graphData">
+                <i class="fa fa-spinner fa-spin"></i>    
+              </ng-container>
+            </div>
+          </div>
+          <div class="progress progress-template">
+            <div role="progressbar" style="width: 100%" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar-template dashbg-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="no-padding-bottom">
+  <div class="container-fluid">
+    <div class="row">
+      <!-- <div class="col-lg-12">
+        <div class="form-group row">
+          <div class="col-sm-3 select">
+            <select name="viewType" class="form-control mb-3">
+              <option selected>Yearly</option>
+              <option>Monthly</option>
+              <option>Daily</option>
+            </select>
+          </div>
+          <div class="col-sm-9 select">
+            <div class="row">
+              <div class="col-sm-4">
+                <select name="viewType" class="form-control mb-3">
+                  <option selected>Yearly</option>
+                  <option>Monthly</option>
+                  <option>Daily</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>   -->
+      <div class="col-lg-4">
+        <div class="bar-chart block no-margin-bottom">
+          <canvas id="barChartUsers"></canvas>
+        </div>
+        <div class="bar-chart block no-margin-bottom">
+          <canvas id="barChartCompanies"></canvas>
+        </div>
+        <div class="bar-chart block">
+          <canvas id="barChartPieces"></canvas>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <div class="line-cahrt block">
+          <canvas id="lineCahrtUCP"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

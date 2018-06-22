@@ -1,0 +1,73 @@
+<div class="page-header">
+  <div class="container-fluid">
+    <h2 class="h5 no-margin-bottom">Company</h2>
+  </div>
+</div>
+<section class="no-padding-bottom">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <ul id="clothing-nav" class="nav nav-tabs" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" href="#company-details" id="company-details-tab" role="tab" data-toggle="tab" aria-controls="company-details" aria-expanded="true">
+              Company Details
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#team-details" role="tab" id="team-details-tab" data-toggle="tab" aria-controls="team-details">
+              Team Details
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#membership-details" role="tab" id="membership-details-tab" data-toggle="tab" aria-controls="membership-details">
+              Membership Details
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#features" role="tab" id="features-tab" data-toggle="tab" aria-controls="features">
+              Features
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#integrations" role="tab" id="integrations-tab" data-toggle="tab" aria-controls="integrations">
+              Integrations
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#company-logs" role="tab" id="company-logs-tab" data-toggle="tab" aria-controls="company-logs">
+              Company Logs
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#usage-cycle" role="tab" id="usage-cycle-tab" data-toggle="tab" aria-controls="usage-cycle">
+              Usage Cycle
+            </a>
+          </li>
+        </ul>
+        <div id="clothing-nav-content" class="tab-content">
+          <div role="tabpanel" class="tab-pane fade show active" id="company-details" aria-labelledby="company-details-tab">
+            <app-company-detail [companyId] = "companyId"></app-company-detail>
+          </div>
+          <div role="tabpanel" class="tab-pane fade" id="team-details" aria-labelledby="team-details-tab">
+            <app-team-detail></app-team-detail>
+          </div>
+          <div role="tabpanel" class="tab-pane fade" id="membership-details" aria-labelledby="membership-details-tab">
+            <app-membership-detail></app-membership-detail>
+          </div>
+          <div role="tabpanel" class="tab-pane fade" id="features" aria-labelledby="features-tab">
+            <app-features></app-features>
+          </div>
+          <div role="tabpanel" class="tab-pane fade" id="integrations" aria-labelledby="integrations-tab">
+            <app-integrations></app-integrations>
+          </div>
+          <div role="tabpanel" class="tab-pane fade" id="company-logs" aria-labelledby="company-logs-tab">
+            <app-company-logs></app-company-logs>
+          </div>
+          <div role="tabpanel" class="tab-pane fade" id="usage-cycle" aria-labelledby="usage-cycle-tab">
+            <app-usage-cycle></app-usage-cycle>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
