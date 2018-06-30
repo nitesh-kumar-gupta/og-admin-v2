@@ -1,3 +1,65 @@
-<p>
-  team-detail works!
-</p>
+<section class="padding-top">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-6 toppad">
+        <div class="panel">
+          <div class="panel-heading">
+            <h3 class="panel-title">&nbsp;
+                <!-- <i *ngIf="edit" class="fa pull-right"[class.fa-edit]="!edit" [class.fa-long-arrow-left]="edit" (click)="editBack()"></i> -->
+              <i *ngIf="!edit" class="fa pull-right fa-edit" [class.fa-edit]="!edit" (click)="editBack()"></i>
+              <i *ngIf="edit" class="fa pull-right fa-long-arrow-left" [class.fa-long-arrow-left]="edit" (click)="editBack()"></i>
+            </h3>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class=" col-md-12 col-lg-12 ">
+                <table class="table table-user-information">
+                  <tbody *ngFor="let t of team">
+                    <tr>
+                      <td>Name:</td>
+                      <td *ngIf="!edit">
+                        {{t.name}}
+                      </td>
+                      <td *ngIf="edit">
+                        <input type="text" class="form-control" id="comp_name" [(ngModel)]="t.name"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Role</td>
+                      <td *ngIf="!edit">{{t.user_company.role}}</td>
+                      <td *ngIf="edit">
+                          <select [(ngModel)]="t.user_company.role">
+                              <option *ngFor="let role of roleEnum">{{role}}</option>
+                            </select>                      </td>
+                    </tr>
+                    <tr>
+                      <td>Status</td>
+                      <td *ngIf="!edit">{{t.user_company.status}}</td>
+                      <td *ngIf="edit">
+                          <select [(ngModel)]="t.user_company.role">
+                              <option *ngFor="let role of roleEnum">{{role}}</option>
+                            </select>                      </td>
+                    </tr>
+                    <tr>
+                      <td>Active</td>
+                      <td *ngIf="!edit">{{t.user_company.active}}</td>
+                      <td *ngIf="edit">
+                          <select [(ngModel)]="t.user_company.role">
+                              <option *ngFor="let role of roleEnum">{{role}}</option>
+                            </select>                      </td>
+                    </tr>
+                   
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="panel-footer text-right">
+            <button id="btn-saveCompany" class="btn btn-primary mb-1 btn-block" (click)="saveCompanyChanges()" *ngIf="edit">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

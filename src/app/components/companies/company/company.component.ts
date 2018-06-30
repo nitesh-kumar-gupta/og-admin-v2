@@ -10,10 +10,20 @@ export class CompanyComponent implements OnInit {
   constructor(private route: ActivatedRoute) {
     this.companyId = null;
     this.route.params.subscribe(params => {
+      console.log(params)
       this.companyId = params.id;
     });
   }
 
   ngOnInit() {
+
   }
+  // getCompanyUser(id: number) {
+  //   this.companyService.getCompanyUsers(id)
+  //     .subscribe(
+  //       (response: any) => {
+  //         this.company_users = response;
+  //       });
+  // }
+
 }

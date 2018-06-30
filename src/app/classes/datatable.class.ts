@@ -48,4 +48,9 @@ export class Datatable {
     nextPage() {
         this.current_page += 1;
     }
+
+    searchData(){
+      this.current_page = 1;
+    }
+
 }

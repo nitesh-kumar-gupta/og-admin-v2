@@ -49,7 +49,7 @@
             <app-company-detail [companyId] = "companyId"></app-company-detail>
           </div>
           <div role="tabpanel" class="tab-pane fade" id="team-details" aria-labelledby="team-details-tab">
-            <app-team-detail></app-team-detail>
+            <app-team-detail  [companyId] = "companyId"  [team]="company_users"></app-team-detail>
           </div>
           <div role="tabpanel" class="tab-pane fade" id="membership-details" aria-labelledby="membership-details-tab">
             <app-membership-detail></app-membership-detail>
