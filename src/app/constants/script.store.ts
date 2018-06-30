@@ -5,4 +5,7 @@ export const ScriptStore: Scripts[] = [
     { name: 'datatables', src: 'https://cdn.datatables.net/v/dt/dt-1.10.12/datatables.min.js' },
     { name: 'moment', src: 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment.min.js' },
     { name: 'daterangepicker', src: '../../../assets/js/daterangepicker.js' },
+    {name: 'wysiwyg', src: '../../../assets/js/wysiwyg.js'},
+    { name: 'ClipBoard', src: "https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"}
+
 ];

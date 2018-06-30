@@ -1,9 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { AdminService } from '../../services/admin.service';
 import { Datatable } from '../../classes/datatable.class';
 import { Company } from '../../models/company.model';
 import { ScriptService } from "../../services/script.service";
+import {Angular2Csv} from 'angular2-csv/Angular2-csv';
+
 import * as moment from 'moment';
+import { CookiesService } from '../../services/cookies.service';
+import { FormControl } from '@angular/forms';
 
 declare let jQuery: any;
 @Component({
@@ -14,10 +18,10 @@ declare let jQuery: any;
 export class SearchCalcComponent extends Datatable implements OnInit {
   pages: number;
   total_pages: number;
-  loadingCompanies: boolean;
   showFilter: boolean;
   apps: Array<any> = [];
-  loading = true;
+  // loading = true;
+  loading: boolean = false;
   onlyLive: boolean = false;
   showAdvancedFilter = false;
   fetchAll: boolean = false;
@@ -44,12 +48,14 @@ export class SearchCalcComponent extends Datatable implements OnInit {
 
   filters: Array<any> = [];
   filter: Object;
+  searchCalc = new FormControl();
+  public sub_role: string = null;
+
   constructor(private adminService: AdminService,private scriptService: ScriptService) {
     super();
     this.showFilter = false;
-    this.loadingCompanies = true;
     this.total_pages= 0;
-    this.pages = 1;
+  //  this.pages = 1;
     this.filter = {
       company: [
         {
@@ -79,24 +85,46 @@ export class SearchCalcComponent extends Datatable implements OnInit {
     visible: true,
 
   }
+  if (CookiesService.readCookie('storage')) {
+    let storage = JSON.parse(CookiesService.readCookie('storage'));
+    this.sub_role = storage.user.sub_role;
+  }
   }
   ngOnInit() {
     this.addFilter();
     this.searchApps();
 
-    // let self = this;
-    // document.getElementById('keyword')
-    //   .addEventListener("keyup", function (event) {
-    //     event.preventDefault();
-    //     if (event.keyCode === 13) {
-    //       self.current_page = 1;
-    //       self.searchData().subscribe(data => self.showApps(data));
-    //     }
-    //   });
+    let self = this;
+    var hi= document.getElementById('keyword')
+if(hi){
+   hi.addEventListener("keyup", function (event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+          self.current_page = 1;
+          self.searchData().subscribe(data => self.showApps(data));
+        }
+      });
+    }
+    else{
+      console.log("I am sorry!!")
+    }
   }
+  
+
+  
 
   ngOnDestroy() {
 
+  }
+  selected(event, index, type) {
+    if (typeof this.filters[index].selected_value === 'string') {
+      this.filters[index].selected_value = {};
+    }
+    if (!Array.isArray(this.filters[index].selected_value[type])) {
+      this.filters[index].selected_value[type] = [];
+    }
+    this.filters[index].selected_value[type].push(event.target.value);
+    console.log(this.filters)
   }
   searchApps() {
     this.searchData().subscribe((response: any) => {
@@ -152,7 +180,7 @@ export class SearchCalcComponent extends Datatable implements OnInit {
   }
 
   applyFilter() {
-    super.searchData();
+    this.searchData();
     this.searchApps();
   }
 
@@ -167,6 +195,7 @@ export class SearchCalcComponent extends Datatable implements OnInit {
   }
   
   setFilterProperty(target, index) {
+    console.log("target",target)
     this.filters[index].selected_property_category = target.options[target.options.selectedIndex].className;
     this.filters[index].selected_property_type = 'string';
     this.filters[index].selected_operator = ''; // reset operator value
@@ -256,8 +285,29 @@ export class SearchCalcComponent extends Datatable implements OnInit {
     const options = {
       headers: ['url', 'status', 'sub domain', 'Layout', 'Experience']
     };
-   // new Angular2Csv(data, 'apps', options);
+    new Angular2Csv(data, 'apps', options);
     });
   }
-   
+
+  sort(columnSortKey) {
+    this.sortKey = columnSortKey;
+    if (this.sortOrder === -1) {
+      this.sortOrder = 1;
+    } else {
+      this.sortOrder = -1;
+    }
+    super.searchData();
+    this.searchApps();
+  }
+
+
+  updateAnalytics() {
+    this.adminService.updateAppsAnalytics().subscribe(data =>
+      this.analyticsUpdateStatus = "success", err => this.analyticsUpdateStatus = "failed");
+  }
+
+  fetchLiveCalc() {
+    this.onlyLive = !this.onlyLive;
+    this.searchApps()
+  }
 }

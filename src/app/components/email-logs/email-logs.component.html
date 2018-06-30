@@ -1,0 +1,205 @@
+<div class="page-header">
+  <div class="container-fluid">
+    <h2 class="h5 no-margin-bottom">Email/Deal Logs</h2>
+  </div>
+</div>
+
+<div class="row">
+  
+<div class="col-lg-5">
+  <label>
+    Search:
+    <input type="search" class="" placeholder="" [(ngModel)]="search" aria-controls="table" (keyup)="searchData()">
+  </label>
+</div>
+<div class="col-lg-2" >
+    <label>Type
+        <select name="table-dataTables_length" aria-controls="all-companies-datatable" (change) = "logTypeChange($event)" class="">
+          <option  value="email">Email</option>
+          <option value="deal">Deal</option>
+        </select>
+      </label>
+</div>
+<div class="col-lg-1"></div>
+<div class="col-lg-4">
+  <div >
+    Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit)
+    > totalCount)? totalCount : current_page * current_limit}} of {{totalCount}}
+    <div class="btn-group">
+      <button type="button" class="btn btn-primary" [disabled]="current_page=== 1" (click)="prevPage();selectLog()">
+        <i class="fa fa-angle-left"></i>
+      </button>
+      <button type="button" class="btn btn-primary" [disabled]="current_page=== total_pages" (click)="nextPage();selectLog()">
+        <i class="fa fa-angle-right"></i>
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="col-lg-12">
+    <div class="block row">
+      <div class="table-responsive">
+
+        <table class="table table-striped table-hover" *ngIf="!loading && logType == 'email' ">
+          <thead>
+            <tr>
+              <th>Sender</th>
+              <th>Reciever</th>
+              <th>Subject</th>
+              <th>Template Id </th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Preview</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngIf="!loading">
+                <tr *ngFor="let log of data">
+                    <td>
+                      {{log.sender}}
+                    </td>
+                    <td>
+                      {{log.receiver}}
+                    </td>
+                    <!--<td>
+                    <div class="comany-tooltip">
+                      {{log.body}}
+        
+                    </div>
+                    </td>-->
+                    <td>
+                      {{log.subject}}
+                    </td>
+                    <td>
+                      {{log.templateId}}
+                    </td>
+                    <td>
+                      {{log.status}}
+                    </td>
+                    <td>
+                      {{log.createdAt}}
+                    </td>
+                    <td>
+                      <a href="javascript:void(0);" data-toggle="modal" data-target="#pending-item">
+                        <i class="fa fa-eye"
+                       (click)="parseBody(log.body)" style="font-size: 22px;" data-original-title="Edit"></i></a>
+                    </td>
+                  </tr>
+            </ng-container>
+            <ng-container *ngIf="!loading && totalCount == 0">
+              <tr>
+                <th colspan="6" scope="row" class="text-center">
+                  No record found
+                </th>
+              </tr>
+            </ng-container>
+            <ng-container *ngIf="loadingCompanies">
+              <tr>
+                <th colspan="6" scope="row" class="text-center"><i class="fa fa-spinner fa-5x fa-spin"></i></th>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Deal type -->
+
+  <div class="col-lg-12">
+      <div class="block row">
+        <div class="table-responsive">
+  
+          <table class="table table-striped table-hover"  *ngIf=" logType == 'deal'">
+            <thead>
+              <tr>
+                  <th>User</th>
+                  <th>Product Id</th>
+                  <th>Transaction</th>
+                  <th>Date</th>
+                  <th>Log</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngIf="!loading">
+                  <tr *ngFor="let log of data">
+                      <td>{{ log.user }} </td>
+                      <td>{{ log.deal_product_id }} </td>
+                      <td>{{ log.data.ctransaction }}</td>
+                      <td>{{ log.createdAt }} </td>
+                      <td>
+                        <a href="javascript:void(0);" data-toggle="modal" data-target="#pending-item"><i class="fa fa-eye"
+                         (click)="parseBody(log.data)" style="font-size: 22px;" data-original-title="Edit"></i></a>
+                      </td>
+                    </tr>
+              </ng-container>
+              <ng-container *ngIf="!loading && totalCount == 0">
+                <tr>
+                  <th colspan="6" scope="row" class="text-center">
+                    No record found
+                  </th>
+                </tr>
+              </ng-container>
+              <ng-container *ngIf="loading">
+                <tr>
+                  <th colspan="6" scope="row" class="text-center"><i class="fa fa-spinner fa-5x fa-spin"></i></th>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+
+     
+      <ng-container *ngIf="loading">
+        <tr>
+          <th colspan="6" scope="row" class="text-center"><i class="fa fa-spinner fa-5x fa-spin"></i></th>
+        </tr>
+      </ng-container>
+    
+        
+
+  <div id="pending-item" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content modal-bg">
+        <div class="modal-header">
+		  <h5 class="modal-title text-left" *ngIf="logType == 'email'">Email Details</h5>
+       <h5 class="modal-title text-left" *ngIf="logType == 'deal'">Deal Log Details</h5>
+       <button type="button" class="close btn-close text-right" data-dismiss="modal" aria-label="Close">
+          <i class="fa fa-close"></i>
+</button>
+        </div>
+        <div class="modal-body">
+          <div class="sahil-material" *ngIf="selected">
+            <!--<textarea [innerHTML]="selected?.body" [readonly]="true" rows="10" style="width:100%"></textarea>-->
+            <div *ngFor="let key of generateKeys(selected)">
+              <p><i>{{ key + '  :-  ' }}</i> <span [innerHTML]="selected[key]"></span></p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-basic" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-12">
+    <div class="text-right">
+      Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit)
+      > totalCount)? totalCount : current_page * current_limit}} of {{totalCount}}
+      <div class="btn-group">
+        <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();selectLog()">
+          <i class="fa fa-angle-left"></i>
+        </button>
+        <button type="button" class="btn btn-primary" [disabled]="current_page === total_pages" (click)="nextPage();selectLog()">
+          <i class="fa fa-angle-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>

@@ -305,7 +305,7 @@ export class CompaniesComponent extends Datatable implements OnInit, OnDestroy {
         this.companies.push(new Company(company));
       });
       this.totalCompanies = success.count;
-      this.pages = Math.ceil(success.count / this.current_limit);
+      this.total_pages = Math.ceil(success.count / this.current_limit);
       this.loadingCompanies = false;
     }, (error: any) => {
       console.error('getCompanies error', error);

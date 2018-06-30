@@ -68,14 +68,14 @@
 
       </div>
       <div class="col-lg-12">
-        <div class="text-right">
+        <div class="text-right" *ngIf="totalCompanies">
           Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit)
           > totalCompanies)? totalCompanies : current_page * current_limit}} of {{totalCompanies}}
           <div class="btn-group">
             <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getCompanies()">
               <i class="fa fa-angle-left"></i>
             </button>
-            <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getCompanies()">
+            <button type="button" class="btn btn-primary" [disabled]="current_page === total_pages" (click)="nextPage();getCompanies()">
               <i class="fa fa-angle-right"></i>
             </button>
           </div>
@@ -130,7 +130,7 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-12">
+      <div class="col-lg-12" *ngIf="totalCompanies">
         <div class="text-right">
           Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit)
           > totalCompanies)? totalCompanies : current_page * current_limit}} of {{totalCompanies}}
@@ -138,7 +138,7 @@
             <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getCompanies()">
               <i class="fa fa-angle-left"></i>
             </button>
-            <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getCompanies()">
+            <button type="button" class="btn btn-primary" [disabled]="current_page === total_pages" (click)="nextPage();getCompanies()">
               <i class="fa fa-angle-right"></i>
             </button>
           </div>

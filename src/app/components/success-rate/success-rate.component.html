@@ -1,0 +1,386 @@
+<div class="page-header">
+  <div class="container-fluid">
+    <h2 class="h5 no-margin-bottom">Success Rate</h2>
+  </div>
+</div>
+
+<section class="no-padding-bottom">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <button class="btn" (click)="showFilters()">
+          <i class="fa fa-filter"></i>{{showFilter ? 'Hide Filter' : 'Show Filter' }}
+        </button>
+      </div>
+      <div class="col-lg-12 block mt-1" *ngIf="showFilter">
+        <div class="row mb-1" *ngFor="let filter of filters; let i = index">
+          <div class="col-lg-1">
+            <button class="btn btn-danger btn-xs" (click)="removeCondition(i)" [disabled]="filters.length == 1">
+              <i class="fa fa-minus"></i>
+            </button>
+          </div>
+          <div class="col-lg-3">
+            <select class="form-control" [(ngModel)]="filters[i].selected_property" (change)="setFilterProperty($event.target,i)" title="Select Operators"
+              style="float:left;margin: 8px">
+              <optgroup label="Company">
+                <option *ngFor="let prop of filter.company" class="company" value="{{prop.value}}">{{prop.name}}</option>
+              </optgroup>
+              <optgroup label="App">
+                <option *ngFor="let prop of filter.app" class="app" value="{{prop.value}}">{{prop.name}}</option>
+              </optgroup>
+              <optgroup label="User">
+                <option *ngFor="let prop of filter.user" class="user" value="{{prop.value}}">{{prop.name}}</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <!-- <div class="col-lg-3">
+                  <select class="form-control" [(ngModel)]="filter.selected_operator" (change)="initDatePcker(i)">
+                    <option *ngFor="let operator of filter.operators[filter.selected_field]; let i = index" value="{{operator}}">{{operator}}</option>
+                  </select>
+                </div> -->
+          <div class="col-lg-3" style="margin-top: 8px">
+            <select class="form-control" [(ngModel)]="filters[i].selected_operator" (change)="setFilterOperator($event.target.value,i)" title="Select Operators">
+              <option style="display: none"></option>
+              <option *ngFor="let operator of filter.operators[filter.selected_property]" [value]="operator">
+                {{operator}}
+              </option>
+            </select>
+          </div>
+          <div *ngIf="(filter.types[filter.selected_property]==='date')" style="display: inline-block">
+
+            <!-- <og-date-picker *ngIf="scriptLoaded && !(filter.selected_operator==='between')"
+                           style="position:absolute;bottom:0" (date)="setDateStart($event,i)">
+           </og-date-picker>
+
+           <og-date-range-picker *ngIf="scriptLoaded && filter.selected_operator==='between'"
+                                 style="position:absolute;bottom:0"
+                                 (date)="setDateRange($event,i)">
+           </og-date-range-picker> -->
+          </div>
+                <div class="col-lg-3"
+                *ngIf="filter.types[filter.selected_property]!='date' && filter.types[filter.selected_property]!='bool'"
+                style="display: inline-block;margin-top: 8px">
+                <input class="form-control" type="text" title="Enter value" (change)="setFilterValue($event.target.value,i)">
+                <input class="form-control"*ngIf="filter.selected_operator==='between'" title="Enter value"
+                       type="number" (change)="filtersPostData[i]['value'][1]=$event.target.value;">
+              </div>
+          <div  class="col-lg-2"  *ngIf="filter.selected_property=='appsumo_created' || filter.selected_property=='cancelled'" style="display: inline-block">
+
+            <select class="form-control" (change)="setFilterValue($event.target.value,i)" title="Select" style="margin-top: 8px">
+              <option style="display: none"></option>
+              <option>true</option>
+              <option>false</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="row mt-2">
+          <div class="col-lg-1">
+            <button class="btn btn-default btn-xs" (click)="addFilter()">
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+          <div class="col-lg-11">
+            <button class="btn btn-success" (click)="applyFilter()">
+              Apply Filter
+            </button>&nbsp;&nbsp;
+            <button type="button" data-toggle="modal" data-target="#saveFilterModal" class="btn btn-info">
+                Save Filter
+              </button>
+          </div>
+        </div>
+
+      </div>
+
+    
+      <div class="col-lg-12">
+        <div class="text-right">
+          Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit)
+          > totalCount)? totalCount: current_page * current_limit}} of {{totalCount}}
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getCompanySuccessData()">
+              <i class="fa fa-angle-left"></i>
+            </button>
+            <button type="button" class="btn btn-primary" [disabled]="current_page === total_pages" (click)="nextPage();getCompanySuccessData()">
+              <i class="fa fa-angle-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="block row">
+          <div class="table-responsive">
+
+            <table class="table table-striped table-hover">
+              <thead>
+
+                <tr class="company-row">
+                  <th (click)="sort('name')">
+                    <div class="sort-icon">
+                      <a href="javascript:void(0);">Company</a>
+                    </div>
+                  </th>
+                  <th>
+                    No of Calculators
+                  </th>
+                  <th (click)="sort('current_usage.traffic')">
+                    <div class="sort-icon">
+                      <a href="javascript:void(0);">Visits/Limit</a>
+                    </div>
+                  </th>
+                  <th (click)="sort('current_usage.leads')">
+                    <div class="sort-icon">
+                      <a href="javascript:void(0);">Leads/Limit</a>
+                    </div>
+                  </th>
+                  <th>
+                    Conversion rate
+                  </th>
+                  <th>Last Lead</th>
+                  <th>Reset Current Usage</th>
+                  <th (click)="sort('createdAt')">
+                    <div class="sort-icon">
+                      <a href="javascript:void(0);">Sign Up</a>
+                    </div>
+                  </th>
+                  <th>
+                    Trial
+                  </th>
+                  <th>Price per cycle</th>
+                  <th (click)="sort('billing.chargebee_plan_id')">
+                    <div class="sort-icon">
+                      <a href="javascript:void(0);">Plan</a>
+                    </div>
+                  </th>
+                  <th>Billing Unit</th>
+                  <th>% cycle over</th>
+                  <th>Deal Referred</th>
+                  <th>Next payment</th>
+                  <th>
+                    --
+                  </th>
+                  <th>
+                    Edit
+                  </th>
+
+                </tr>
+              </thead>
+              <tbody *ngFor="let company of company">
+                <ng-container  *ngIf="!loading">
+                  <tr>
+                    <td>
+                      <a href="javascript:void(0);" (click)="toggleCompanyDetails(company)">{{company.name}}</a>
+                    </td>
+                    <td>
+                      {{company.current_usage.calc}}/{{company.calcLimit}}
+                    </td>
+                    <td>
+                      {{company.visitors}}/{{company.visitsLimit}}
+                    </td>
+                    <td>
+                      {{company.leads}}/{{company.leadsLimit}}
+                    </td>
+                    <td>
+                      {{company.current_usage.total_conversion_rate}}%
+                    </td>
+                    <td>{{momentJs(company.last_lead?.last_added).fromNow()}}</td>
+                    <td>{{company.reset_current_usage}}</td>
+                    <td>{{momentJs(company.createdAt).fromNow()}}</td>
+                    <td>{{company.billing.chargebee_subscription_status}}</td>
+                    <td>{{company.billing.plan_price}}</td>
+                    <td>{{company.plan}}</td>
+                    <td>{{company.billing.subscription?.billing_unit}}</td>
+                    <td>{{company.billing.subscription?.percent_cycle_over}}%</td>
+                    <td>{{company.campaign}}</td>
+                    <td>{{momentJs(company.billing.subscription?.end).fromNow()}}</td>
+                    <td>
+                      <a href="" data-toggle="modal" data-target="#companyDetailsModal" (click)="getPaymentsInfo(company._id)">
+                        Payments</a>
+                    </td>
+                    <td>
+                      <a [routerLink]="['/admin/company',company._id]">
+                        <i class="fa fa-edit" style="font-size: 22px;" data-original-title="Edit">
+                         </i>
+                      </a>
+                    </td>
+                  </tr>
+                  <tr *ngIf="company.showDetails">
+                    <td colspan="11">
+                      <app-company-details [company]="company"></app-company-details>
+                    </td>
+                  </tr>
+                </ng-container>
+                <ng-container *ngIf="!loading && totalCount== 0">
+                      <tr>
+                        <th colspan="6" scope="row" class="text-center">
+                          No record found
+                        </th>
+                      </tr>
+                    </ng-container>
+                <ng-container *ngIf="loading">
+                  <tr>
+                    <th colspan="6" scope="row" class="text-center">
+                      <i class="fa fa-spinner fa-5x fa-spin"></i>
+                    </th>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="text-right">
+          Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit)
+          > totalCount)? totalCount: current_page * current_limit}} of {{totalCount}}
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getCompanySuccessData()">
+              <i class="fa fa-angle-left"></i>
+            </button>
+            <button type="button" class="btn btn-primary" [disabled]="current_page === total_pages" (click)="nextPage();getCompanySuccessData()">
+              <i class="fa fa-angle-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Modal -->
+<div id="companyDetailsModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Details</h4>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="paymentLoading">
+          <!-- <img src="assets/images/logoAnim.gif" alt="loading..." id="imgLoading"> -->
+        </div>
+      </div>
+      <div class="payment-history-dialog" *ngIf="!paymentLoading">
+        <!-- Modal content-->
+        <div class="payment-history-content">
+          <p>&nbsp;&nbsp;&nbsp;&nbsp;
+            <b>Invoices</b>
+          </p>
+          <div class="payment-history-body col-md-12 np">
+
+            <div class="sahil-material">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Invoice No.</th>
+                      <th>Date</th>
+                      <th>Amount</th>
+                      <th>Paid Via</th>
+                      <th>Download</th>
+                    </tr>
+                  </thead>
+                  <tbody *ngFor="let invoice of invoices" value="invoice">
+                    <tr *ngIf="isInvoiceExist">
+                      <td>{{invoice.invoiceNo}}</td>
+                      <td class="text-opacity">{{invoice.date}}</td>
+                      <td>$ {{invoice.amount_paid/100}}</td>
+                      <td class="text-opacity">Credit Card</td>
+                      <td>
+                        <a href="{{invoice.href}}" class="invoiceId pdf-download" target="_blank">
+                          PDF
+                          <!-- <i class="material-icons">file_download</i> -->
+                        </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tbody>
+                    <tr *ngIf="!isInvoiceExist">
+                      <td></td>
+                      <td></td>
+                      <td colspan="5" class="no-invoice">
+                        No Invoice has been raised
+                      </td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="payment-history-footer col-md-12 np">
+            <div class="col-md-5 np"></div>
+            <div class="col-md-7 np">
+              <!--<button type="" class="btn btn-red-outline btn-hover">Approve Request</button>-->
+              <ul class="pagination hide">
+                <li>
+                  <a href="javascript:void(0);">1</a>
+                </li>
+                <li>
+                  <a href="javascript:void(0);">2</a>
+                </li>
+                <li>
+                  <a href="javascript:void(0);">3</a>
+                </li>
+                <li>
+                  <a href="javascript:void(0);">4</a>
+                </li>
+                <li>
+                  <a href="javascript:void(0);">5</a>
+                </li>
+                <li>
+                  <a href="javascript:void(0);">
+                    <i class="material-icons">play_arrow</i>
+                  </a>
+                </li>
+                <li>
+                  <a href="javascript:void(0);">
+                    <i class="material-icons">skip_next</i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="saveFilterModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Save Custom Filter</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div>Enter Filter Name:
+          <input #filterName type="text" />
+        </div>
+        <br>
+
+        <div>Enter Description:
+          <textarea #filterDescription rows="3" cols="30"></textarea>
+        </div>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="saveFilter(filterName,filterDescription)">Save Filter
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

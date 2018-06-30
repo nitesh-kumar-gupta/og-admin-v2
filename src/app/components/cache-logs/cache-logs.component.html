@@ -1,20 +1,20 @@
 <div class="page-header">
-  <div class="container-fluid">
-    <h2 class="h5 no-margin-bottom">Cache Logs</h2>
+    <div class="container-fluid">
+      <h2 class="h5 no-margin-bottom">Cache Logs</h2>
+    </div>
   </div>
-</div>
-<div class="row">
-  <div class="col-lg-1"></div>
-  <div class="col-lg-8" *ngIf="totalCount">
+  <div class="row">
+    <div class="col-lg-1"></div>
+  <div class="col-lg-8">
     <label>
       Search:
       <input type="search" class="" placeholder="" [(ngModel)]="searchText" aria-controls="table" (keyup)="searchData()">
     </label>
   </div>
-  <div class="col-lg-3" *ngIf="totalCount">
-    <div>
+  <div class="col-lg-3" *ngIf="totalCache">
+    <div >
       Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit)
-      > totalCount)? totalCount : current_page * current_limit}} of {{totalCount}}
+      > totalCache)? totalCache : current_page * current_limit}} of {{totalCache}}
       <div class="btn-group">
         <button type="button" class="btn btn-primary" [disabled]="current_page=== 1" (click)="prevPage();getCacheLogs()">
           <i class="fa fa-angle-left"></i>
@@ -25,127 +25,128 @@
       </div>
     </div>
   </div>
-</div>
-<div class="col-lg-12">
-  <div class="block row">
-    <div class="table-responsive">
-
-      <table class="table table-striped table-hover">
-        <thead *ngIf="totalCount">
-          <tr>
-            <th>Keys</th>
-            <th scope="row">Values</th>
-            <th scope="row">Delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          <ng-container *ngIf="!loading">
-            <tr *ngFor="let key of keyValues; let i = index">
-              <td>
-                {{key.key}}
-              </td>
-              <th scope="row">
-                <a href="javascript:void(0);" style="cursor:pointer" data-toggle="modal" data-target="#key-value">
-                  <i class="fa fa-eye" (click)="KeyValueDisplay(i,key.key)"></i>
-                </a>
-              </th>
-              <th scope="row">
-                <a href="javascript:void(0);" style="cursor:pointer">
-                  <i class="fa fa-trash" (click)="deleteCache(i,key.key)"></i>
-                </a>
-              </th>
-            </tr>
-          </ng-container>
-          <ng-container *ngIf="!loading && totalCount == 0">
+  </div>
+  <div class="col-lg-12">
+    <div class="block row">
+      <div class="table-responsive">
+  
+        <table class="table table-striped table-hover">
+          <thead>
             <tr>
-              <th colspan="6" scope="row" class="text-center">
-                No record found
-              </th>
+              <th>Keys</th>
+              <th scope="row">Values</th>
+              <th scope="row">Delete</th>
             </tr>
-          </ng-container>
-          <ng-container *ngIf="loading">
-            <tr>
-              <th colspan="6" scope="row" class="text-center">
-                <i class="fa fa-spinner fa-5x fa-spin"></i>
-              </th>
-            </tr>
-          </ng-container>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <ng-container *ngIf="!loading">
+              <tr *ngFor="let key of keyValues; let i = index">
+                <td >
+                  {{key.key}}
+                </td>
+                <th scope="row" >
+                  <a href="javascript:void(0);" style="cursor:pointer" data-toggle="modal" data-target="#key-value">
+                    <i class="fa fa-eye" (click)="KeyValueDisplay(i,key.key)"></i>
+                  </a>
+                </th>
+                <th scope="row">
+                  <a href="javascript:void(0);" style="cursor:pointer">
+                    <i class="fa fa-trash" (click)="deleteCache(i,key.key)"></i>
+                  </a>
+                </th>
+              </tr>
+            </ng-container>
+            <ng-container *ngIf="!loading && totalCache == 0">
+              <tr>
+                <th colspan="6" scope="row" class="text-center">
+                  No record found
+                </th>
+              </tr>
+            </ng-container>
+            <ng-container *ngIf="loading">
+              <tr>
+                <th colspan="6" scope="row" class="text-center">
+                  <i class="fa fa-spinner fa-5x fa-spin"></i>
+                </th>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
-</div>
-
-<div class="modal fade" id="key-value" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"> Cached details</h5>
-        <a title="close" href="#" data-dismiss="modal" aria-label="Close">
-          <i class="fa fa-close"></i>
-        </a>
-      </div>
-      <div class="modal-body">
-        <div class="sahil-material">
-          <div class="row">
-            <div class="col-md-12">
-              <table class="logs">
-                <tr>
-                  <td>Key :</td>
-                  <td>{{KeyName}}</td>
-                </tr>
-              </table>
+  
+  <div class="modal fade" id="key-value" role="dialog" aria-hidden="true" >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"> Cached details</h5>
+          <a title="close" href="#" data-dismiss="modal" aria-label="Close">
+            <i class="fa fa-close"></i>
+          </a>
+        </div>
+        <div class="modal-body">
+          <div class="sahil-material">
+            <div class="row">
+              <div class="col-md-12">
+                <table class="logs">
+                  <tr>
+                    <td>Key :</td>
+                    <td>{{KeyName}}</td>
+                  </tr>
+                </table>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="panel panel-info">
-                <div class="panel-heading">
-                  <div class="panel-title">
-                    <div class="col-sm-12 ">
-                      <!-- <h4 style="text-align: center">{{KeyName}}</h4> -->
+            <div class="row">
+              <div class="col-md-12">
+                <div class="panel panel-info">
+                  <div class="panel-heading">
+                    <div class="panel-title">
+                      <div class="col-sm-12 ">
+                        <!-- <h4 style="text-align: center">{{KeyName}}</h4> -->
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="panel-body table-outer">
-                  <!-- <pre >
-  &#123;
-  <span *ngFor="let item of generateKeys(beforeChange)">
-  <span [innerHTML]="beforeChange[item]"></span>
-  </span>
-  &#125;
-  </pre> -->
-                  <div style="float:left; width:100%;">
-                    <span>value</span>
-                    <pre style="float:left; width:100%; max-height:500px; overflow: auto;" id="json"></pre>
+                  <div class="panel-body table-outer">
+                    <!-- <pre >
+    &#123;
+    <span *ngFor="let item of generateKeys(beforeChange)">
+    <span [innerHTML]="beforeChange[item]"></span>
+    </span>
+    &#125;
+    </pre> -->
+                    <div style="float:left; width:100%;">
+                      <span>value</span>
+                      <pre style="float:left; width:100%; max-height:500px; overflow: auto;" id="json"></pre>
+                    </div>
+                    <!-- {{beforeChange|json}} -->
                   </div>
-                  <!-- {{beforeChange|json}} -->
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
+        <div class="modal-footer">
+        </div>
       </div>
     </div>
   </div>
-</div>
-
-
-<!-- New Html paging -->
-
-<div class="col-lg-12">
-  <div class="text-right" *ngIf="totalCount">
-    Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit)
-    > totalCount)? totalCount : current_page * current_limit}} of {{totalCount}}
-    <div class="btn-group">
-      <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getCacheLogs()">
-        <i class="fa fa-angle-left"></i>
-      </button>
-      <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getCacheLogs()">
-        <i class="fa fa-angle-right"></i>
-      </button>
+  
+  
+  <!-- New Html paging -->
+  
+  <div class="col-lg-12">
+    <div class="text-right" *ngIf="totalCache">
+      Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit)
+      > totalCache)? totalCache : current_page * current_limit}} of {{totalCache}}
+      <div class="btn-group">
+        <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getCacheLogs()">
+          <i class="fa fa-angle-left"></i>
+        </button>
+        <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getCacheLogs()">
+          <i class="fa fa-angle-right"></i>
+        </button>
+      </div>
     </div>
   </div>
-</div>
+  

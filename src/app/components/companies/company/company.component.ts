@@ -87,4 +87,12 @@ export class CompanyComponent implements OnInit, AfterViewInit {
     changes = changes.filter(obj => obj['parent_feature'] === 'templates');
     changes.length && this._adminService.companyTemplates.next(changes);
   }
+  // getCompanyUser(id: number) {
+  //   this.companyService.getCompanyUsers(id)
+  //     .subscribe(
+  //       (response: any) => {
+  //         this.company_users = response;
+  //       });
+  // }
+
 }

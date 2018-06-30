@@ -3,7 +3,6 @@ import { Datatable } from '../../classes/datatable.class';
 import { AdminService } from '../../services/admin.service';
 
 declare var bootbox: any;
-declare var window: any;
 @Component({
   selector: 'app-cache-logs',
   templateUrl: './cache-logs.component.html',
@@ -11,14 +10,13 @@ declare var window: any;
 })
 export class CacheLogsComponent extends Datatable implements OnInit {
 
-  totalCount: any = 0;
   searchText: string;
   main: any;
   keyValues: any;
   pages: number;
   subscribes: any = [];
   totalCache: number;
-  loading: boolean = false;
+  loading: boolean;
   KeyName: any;
 
   constructor(private adminService: AdminService) {
@@ -45,14 +43,14 @@ export class CacheLogsComponent extends Datatable implements OnInit {
         for (let i = 0; i < success.data.length; i++)
           success.data[i] = JSON.parse(success.data[i])
         this.keyValues = success.data;
-        if (this.keyValues)
-          this.totalCount = success.count
         this.main = this.keyValues;
         this.totalCache = success.count;
         this.pages = Math.ceil(success.count / this.current_limit);
+        
+        console.log(this.pages, success.count, this.current_limit)
         this.loading = false;
       }, (error: any) => {
-        window.toastNotification("Failed to load cache...")
+        // window.toastNotification("Failed to load cache...")
         console.error('getCacheLogs error', error);
 
       })
@@ -101,17 +99,17 @@ export class CacheLogsComponent extends Datatable implements OnInit {
             self.adminService.clearCache(keys)
               .subscribe(data => {
                 if (data) {
-                  window.toastNotification('Cache deleted Succesfully...');
+                  // window.toastNotification('Cache deleted Succesfully...');
                   window.alert("Cache deleted Successfully")
                   self.keyValues.splice(index, 1)
                 }
                 else {
                   window.alert("Failed to delete cache")
-                  window.toastNotification('Failed to delete Cache...');
+                  // window.toastNotification('Failed to delete Cache...');
                 }
               }, error => {
                 window.alert("Failed to delete cache")
-                window.toastNotification('Failed to delete Cache...');
+                // window.toastNotification('Failed to delete Cache...');
               })
           }
         }
