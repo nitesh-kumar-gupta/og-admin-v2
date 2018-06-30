@@ -71,59 +71,60 @@
 // }
 
 export class UsersCompany{
-  public id: String;
-  public updatedAt: Date;
-  public createdAt: Date;
-  public user: String;
-  public active: Boolean;
-  public status: String;
-  public left_at: Date;
-  public role: String;
-  public deleted: Deleted;
-  public invite: Invite;
-  public companyName:String;
-  public domain: String;
-  constructor(users_company:any){
-    if(users_company){
-      this.id = users_company._id;
-      this.updatedAt = users_company.updatedAt;
-      this.createdAt = users_company.createdAt;
-      this.user = users_company.user;
-      this.active = users_company.active;
-      this.status = users_company.status;
-      this.left_at = users_company.left_at;
-      this.role = users_company.role;
-      this.deleted = new Deleted(users_company.deleted);
-      this.invite = new Invite(users_company.invite);
-      this.companyName = users_company.companyName;
-      this.domain = users_company.domain;
+    public id: String;
+    public updatedAt: Date;
+    public createdAt: Date;
+    public user: String;
+    public active: Boolean;
+    public status: String;
+    public left_at: Date;
+    public role: String;
+    public deleted: Deleted;
+    public invite: Invite;
+    public companyName:String;
+    public domain: String;
+    constructor(users_company:any){
+      if(users_company){
+        this.id = users_company._id;
+        this.updatedAt = users_company.updatedAt;
+        this.createdAt = users_company.createdAt;
+        this.user = users_company.user;
+        this.active = users_company.active;
+        this.status = users_company.status;
+        this.left_at = users_company.left_at;
+        this.role = users_company.role;
+        this.deleted = new Deleted(users_company.deleted);
+        this.invite = new Invite(users_company.invite);
+        this.companyName = users_company.companyName;
+        this.domain = users_company.domain;
+      }
     }
   }
-}
-
-export class Deleted{
-  public at: Date;
-  constructor(deleted: any){
-    if(deleted)
-      this.at = deleted.at;
-  }
-}
-
-export class Invite{
-  public request_from: String;
-  public requested_by: String;
-  public approved_by: String;
-  public approved_at: Date;
-  public requested_at: Date;
-  constructor(invite: any){
-    if(invite){
-      this.request_from = invite.request_from;
-      this.requested_at = invite.requested_at;
-      this.approved_by = invite.approved_by;
-      this.approved_at = invite.approved_at;
-      this.requested_at = invite.requested_at;
+  
+  export class Deleted{
+    public at: Date;
+    constructor(deleted: any){
+      if(deleted)
+        this.at = deleted.at;
     }
   }
-}
-
-
+  
+  export class Invite{
+    public request_from: String;
+    public requested_by: String;
+    public approved_by: String;
+    public approved_at: Date;
+    public requested_at: Date;
+    constructor(invite: any){
+      if(invite){
+        this.request_from = invite.request_from;
+        this.requested_at = invite.requested_at;
+        this.approved_by = invite.approved_by;
+        this.approved_at = invite.approved_at;
+        this.requested_at = invite.requested_at;
+      }
+    }
+  }
+  
+  
+  

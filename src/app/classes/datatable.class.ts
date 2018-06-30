@@ -90,4 +90,7 @@ export class Datatable {
       this.current_limit = 10;
       this.current_page = 1;
     }
+
+    
+
 }

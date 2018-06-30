@@ -28,10 +28,11 @@ export class BaseService {
   }
 
   protected get_options(){
-    return new RequestOptions({ headers: this.headers, method: 'get'});
+    return new RequestOptions({ headers: this.headers ,method: 'get'});
   }
 
   protected put_options() {
+   
     return new RequestOptions({headers: this.headers, method: 'put'});
   }
 
@@ -60,6 +61,42 @@ export class BaseService {
       window.location.href = environment.APP_DOMAIN;
     }
     return throwError(body);
+  }
+
+  readCookie(name:string) {
+    let nameEQ = name + "=";
+    let ca = document.cookie.split(';');
+    for(let i=0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0)==' ') c = c.substring(1,c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+  }
+
+  createCookie(name:string,value:string,days:number) {
+    value = ( name == 'storage' && value != '' ? this.spliceCookie(JSON.parse(value)) : value );
+    // console.log("CCCCC",value);
+    let expires = "";
+    let domain  = environment.APP_EXTENSION;
+    if (days) {
+      let date = new Date();
+      date.setTime(date.getTime()+(days*24*60*60*1000));
+      expires = "; expires="+date.toUTCString();
+    }
+    document.cookie = name+"="+value+expires+"; domain="+domain+"; path=/";
+  }
+
+  spliceCookie(storage){
+    storage.user ? storage.user.location = '' : '';
+    // storage.company ? storage.company.name = '' : '';
+    //console.log(storage.user.location,"in method CCCCC",storage.user.location);
+
+    return JSON.stringify(storage);
+  }
+
+  eraseCookie(name:string) {
+    this.createCookie(name,"",-1);
   }
 
 }
