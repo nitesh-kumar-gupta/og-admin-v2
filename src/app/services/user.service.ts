@@ -18,7 +18,7 @@ export class UserService extends BaseService {
     super();
   }
   getAllUsers(data: any) {
-    let getUsersUrl = this._url + '/users';
+    let getUsersUrl = this._url + '/admin/users';
     return this.http.post(getUsersUrl, data).pipe(
       map(this.extractData),
       catchError(this.handleError)
