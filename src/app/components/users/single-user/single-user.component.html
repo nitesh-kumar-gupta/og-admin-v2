@@ -1,0 +1,66 @@
+<div class="page-header">
+  <div class="container-fluid">
+    <h2 class="h5 no-margin-bottom">User</h2>
+  </div>
+</div>
+<section class="no-padding-bottom">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <ul id="clothing-nav" class="nav nav-tabs" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" href="#user-details" id="user-details-tab" role="tab" data-toggle="tab" aria-controls="user-details"
+              aria-expanded="true">
+              User Details
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#calculators" role="tab" id="calculators-tab" data-toggle="tab" aria-controls="calculators">
+              Calculators
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#membership-details" role="tab" id="membership-details-tab" data-toggle="tab" aria-controls="membership-details">
+              Membership Details
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#other-details" role="tab" id="other-details-tab" data-toggle="tab" aria-controls="other-details">
+              Other Details
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#team-details" role="tab" id="team-details-tab" data-toggle="tab" aria-controls="team-details">
+              Team Details
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#user-logs" role="tab" id="user-logs-tab" data-toggle="tab" aria-controls="user-logs">
+              User Logs
+            </a>
+          </li>
+        </ul>
+        <div *ngIf="!loading" id="clothing-nav-content" class="tab-content">
+          <div role="tabpanel" class="tab-pane fade show active" id="user-details" aria-labelledby="user-details-tab">
+            <app-account-details [companies]="companies"></app-account-details>
+          </div>
+          <div role="tabpanel" class="tab-pane fade" id="calculators" aria-labelledby="calculators-tab">
+            <app-calculators></app-calculators>
+          </div>
+          <div role="tabpanel" class="tab-pane fade" id="membership-details" aria-labelledby="membership-details-tab">
+            <app-membership-details [companies]="companies"></app-membership-details>
+          </div>
+          <div role="tabpanel" class="tab-pane fade" id="other-details" aria-labelledby="other-details-tab">
+            <app-other-details></app-other-details>
+          </div>
+          <div role="tabpanel" class="tab-pane fade" id="team-details" aria-labelledby="team-details-tab">
+            <app-team-details></app-team-details>
+          </div>
+          <div role="tabpanel" class="tab-pane fade" id="user-logs" aria-labelledby="user-logs-tab">
+            <app-user-logs></app-user-logs>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

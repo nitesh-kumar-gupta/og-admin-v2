@@ -14,17 +14,42 @@ import { CompanyComponent } from '../../components/companies/company/company.com
 import { CompanyDetailComponent } from '../../components/companies/company/components/company-detail/company-detail.component';
 import { TeamDetailComponent } from '../../components/companies/company/components/team-detail/team-detail.component';
 import { MembershipDetailComponent } from '../../components/companies/company/components/membership-detail/membership-detail.component';
-import { FeaturesComponent } from '../../components/companies/company/components/features/features.component';
 import { IntegrationsComponent } from '../../components/companies/company/components/integrations/integrations.component';
 import { CompanyLogsComponent } from '../../components/companies/company/components/company-logs/company-logs.component';
 import { UsageCycleComponent } from '../../components/companies/company/components/usage-cycle/usage-cycle.component';
+import { EventsComponent } from '../../components/events/events.component';
+import { CacheLogsComponent } from '../../components/cache-logs/cache-logs.component';
+import { SubdomainComponent } from '../../components/subdomain/subdomain.component';
+import { DomainComponent } from '../../components/subdomain/component/domain.component';
+import { LocaleComponent } from '../../components/locale/locale.component';
+import { SingleUserComponent } from '../../components/users/single-user/single-user.component';
+import { AccountDetailsComponent, CalculatorsComponent, MembershipDetailsComponent, OtherDetailsComponent, TeamDetailsComponent } from '../../components/users/single-user/components';
+import { UserLogsComponent } from '../../components/users/single-user/components/user-logs/user-logs.component';
+import { AllUsersComponent } from '../../components/users/all-users/all-users.component';
+import { LeadsComponent } from '../../components/leads/leads.component';
+import { LogComponent } from '../../components/log/log.component';
+import { PremadesComponent } from '../../components/premades/premades.component';
+import { AllFeaturesComponent } from '../../components/all-features/all-features.component';
+import { SelectModule } from 'ng2-select';
+import { PlansComponent } from '../../components/plans/plans.component';
+import { PlanComponent } from '../../components/plans/plan/plan.component';
+import { PremadeComponent } from '../../components/plans/premade/premade.component';
+import { FeatureComponent } from '../../components/plans/feature/feature.component';
+import { FeatureLayoutManagerComponent } from '../../components/shared/feature-layout-manager/feature-layout-manager.component';
+import { SearchCalcComponent } from '../../components/search-calc/search-calc.component';
+import { JSONCompare } from '../../services/helper/json-compare';
+import { CompanyFeaturesComponent } from '../../components/companies/company/components/features/company-features/company-features.component';
+import { CompanyPremadesComponent } from '../../components/companies/company/components/features/company-premades/company-premades.component';
+import { CompanyCalculatorsComponent } from '../../components/companies/company/components/features/company-calculators/company-calculators.component';
 
 @NgModule({
   imports: [
     RouterModule.forChild(ADMIN_ROUTES),
     CommonModule,
     FormsModule,
-    AngularMultiSelectModule
+    ReactiveFormsModule,
+    AngularMultiSelectModule,
+    SelectModule
   ],
   declarations: [
     AdminComponent,
@@ -37,10 +62,36 @@ import { UsageCycleComponent } from '../../components/companies/company/componen
     CompanyDetailComponent,
     TeamDetailComponent,
     MembershipDetailComponent,
-    FeaturesComponent,
     IntegrationsComponent,
     CompanyLogsComponent,
-    UsageCycleComponent
-  ]
+    UsageCycleComponent,
+    EventsComponent,
+    CacheLogsComponent,
+    DomainComponent,
+    SubdomainComponent,
+    LocaleComponent,
+    AllUsersComponent,
+    SingleUserComponent,
+    AccountDetailsComponent,
+    CalculatorsComponent,
+    MembershipDetailsComponent,
+    OtherDetailsComponent,
+    TeamDetailsComponent,
+    UserLogsComponent,
+    LeadsComponent,
+    LogComponent,
+    PremadesComponent,
+    AllFeaturesComponent,
+    PlansComponent,
+    PlanComponent,
+    PremadeComponent,
+    FeatureComponent,
+    FeatureLayoutManagerComponent,
+    SearchCalcComponent,
+    CompanyFeaturesComponent,
+    CompanyPremadesComponent,
+    CompanyCalculatorsComponent,
+  ],
+  providers:[JSONCompare]
 })
 export class AdminModule { }

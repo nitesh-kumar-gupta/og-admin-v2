@@ -1,0 +1,44 @@
+<div class="page-header">
+  <div class="container-fluid">
+    <h2 class="h5 no-margin-bottom">Plans</h2>
+  </div>
+</div>
+<section class="no-padding-bottom">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="col-md-2 pull-left">
+          <select id="plansBox" #selectBox (change)="planChanged($event.target.value)">
+            <option [value]="-1">Select a Plan</option>
+            <optgroup *ngFor="let type of plansInfo['planTypes']" [label]="type['_id']">
+              <option *ngFor="let plan of type['names'];let i=index" [value]="plan['id']">
+                {{plan['text']}}
+              </option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="col-md-2 pull-right">
+          <a [routerLink]="['/admin/features']" target="_blank" class="btn btn-primary pull-right">
+            Manage Features
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="selectedPlan">
+      <div class="col-md-12">
+        <app-plan [data]="selectedPlan['plan']" [plansInfo]="plansInfo" (planAdded)="changeSelection($event)" (planUpdates)="updatePlan($event)"></app-plan>
+      </div>
+    </div>
+    <div *ngIf="selectBox.value!=-1">
+
+      <div class="row">
+        <div class="col-md-6">
+          <app-feature [data]="selectedPlan" (featureUpdates)="emitChanges($event)"></app-feature>
+        </div>
+        <div class="col-md-6">
+          <app-premade [data]="selectedPlan" [templates]="templates"></app-premade>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

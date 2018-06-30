@@ -1,0 +1,69 @@
+<div class="panel">
+  <div class="panel-heading">
+    <h5 class="panel-title">
+      Calculator Details
+    </h5>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class=" col-md-12 col-lg-12 ">
+        <table class="table table-user-information">
+          <thead>
+            <tr>
+              <th>
+                Calc Link
+              </th>
+              <th>
+                Name
+              </th>
+              <th>
+                Score
+              </th>
+              <th>
+                Template
+              </th>
+              <th>
+                Status
+              </th>
+              <th>
+                Webhook Event
+              </th>
+            </tr>
+          </thead>
+          <tbody *ngIf="totalCount">
+            <tr *ngFor="let calc of calc_details">
+              <td *ngIf="calc.liveApp!=null">
+                <a href="javascript:void()" (click)="calc_navigation(calc.url)">{{link_maker(calc.url)}}</a>
+              </td>
+              <td *ngIf="calc.liveApp==null">
+                {{link_maker(calc.url)}}
+              </td>
+              <td>{{calc.name}}</td>
+              <td>{{calc.score}}</td>
+              <td>{{calc.template}}</td>
+              <td *ngIf="calc.liveApp==null && (calc.status=='DEV' || calc.status=='LIVE')">DEV</td>
+              <td *ngIf="calc.liveApp!=null && (calc.status=='DEV' || calc.status=='LIVE')">LIVE</td>
+              <td *ngIf="!(calc.status=='DEV' || calc.status=='LIVE')">{{calc.status}}</td>
+              <td>
+                <a data-toggle="modal" data-target="#event-details">Show</a>
+              </td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr *ngIf="!totalCount">
+              <td></td>
+              <td></td>
+              <td colspan="5" class="no-invoice">
+                No Calculator records found
+              </td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="panel-footer">
+  </div>
+</div>

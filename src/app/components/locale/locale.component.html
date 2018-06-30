@@ -1,0 +1,66 @@
+<div class="page-header">
+  <div class="container-fluid">
+    <h2 class="h5 no-margin-bottom">Locales</h2>
+  </div>
+</div>
+<section class="no-padding-bottom">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <ul id="clothing-nav" class="nav nav-tabs" role="tablist">
+          <li class="nav-item col-md-6">
+            <a class="nav-link active" href='#addLang' id="addLang-tab" role="tab" data-toggle="tab" aria-controls="addLang" (click)="tabType='add';msg='';">Add Language </a>
+          </li>
+          <li class="nav-item col-md-6">
+            <a class="nav-link" href='#updateLang' id="updateLang-tab" role="tab" data-toggle="tab" aria-controls="updateLang" (click)="tabType='updateremove';msg='';">Remove/Update Languages </a>
+          </li>
+        </ul>
+        <div class="all-companies-container">
+          <div *ngIf="tabType=='updateremove'">
+            <h4 style="text-align:center;margin:20px">Update/Remove LANGUAGE</h4>
+            <!--Update Section Start-->
+            <select style="max-width: 400px;margin: 25px;" class="select-default" (change)="selectLanguage($event.target.value)" data-width="fit"
+              class="form-control">
+              <option *ngFor="let lang of allLangs" [selected]="lang.langCode==langCode" value="{{lang.langCode}}">{{lang.langCode}}-{{lang.language}}</option>
+            </select>
+
+            <div style="float:left; width:100%; margin-bottom:20px;">
+              Language :
+              <input [(ngModel)]="language" type="search">
+            </div>
+            <div style="float:left; width:100%; margin-bottom:20px;" *ngFor="let field of dataKeys">
+              {{field}} :
+              <input [(ngModel)]="data[field]" type="search">
+            </div>
+            <!--Update Section End-->
+
+            <a class="btn btn-default" type="button" (click)="update()">Update </a>
+            <a class="btn btn-default" type="button" (click)="delete()">Delete</a>
+          </div>
+
+          <div *ngIf="tabType=='add'">
+            <h4 style="text-align:center;margin:20px">ADD NEW LANGUAGE</h4>
+            <!--Add Section Start-->
+
+            <div style="float:left; width:100%; margin-bottom:20px;">
+              Language :
+              <input [(ngModel)]="language" type="search">
+            </div>
+            <div style="float:left; width:100%; margin-bottom:20px;">
+              Language Code :
+              <input [(ngModel)]="langCode" type="search">
+            </div>
+            <div style="float:left; width:100%; margin-bottom:20px;" *ngFor="let field of dataKeys">
+              {{field}} :
+              <input [(ngModel)]="data[field]" type="search">
+            </div>
+
+            <a class="btn btn-default" type="button" (click)="add()">Add</a>
+            <!--Add Section End-->
+          </div>
+          <span style="color:blue">{{msg}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

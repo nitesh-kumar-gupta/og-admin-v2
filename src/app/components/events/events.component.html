@@ -1,0 +1,253 @@
+<div class="page-header">
+  <div class="container-fluid">
+    <h2 class="h5 no-margin-bottom">Events</h2>
+  </div>
+</div>
+<section class="no-padding-bottom">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="col-md-2 pull-right">
+          <a href="javascript:void(0);" class="btn btn-default " id="btnEvent" data-toggle="modal" data-target="#add-event" (click)="eventForm.reset();edit=false;loader=false;errorMessage=''">Add Event</a>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-8" *ngIf="totalCount">
+        <button class="btn" (click)="showFilters()">
+          <i class="fa fa-filter"></i>{{showFilter ? 'Hide Filter' : 'Show Filter' }}
+        </button>
+      </div>
+      <!-- <div class="col-lg-4">
+        <label>
+          Search:
+          <input type="search" class="" placeholder="" [(ngModel)]="search" aria-controls="table" (keyup)="searchData()">
+        </label>
+      </div> -->
+      <div class="col-lg-12 block mt-1" *ngIf="showFilter">
+        <div class="row mb-1" *ngFor="let condition of conditions; let i = index">
+          <div class="col-lg-1">
+            <button class="btn btn-danger btn-xs" (click)="removeCondition(i)" [disabled]="conditions.length == 1">
+              <i class="fa fa-minus"></i>
+            </button>
+          </div>
+          <div class="col-lg-3">
+            <select class="form-control" [(ngModel)]="condition.selected_field" (change)="condition.stringValue = ''; condition.multiSelectSelected = []; initDatePcker(i)">
+              <optgroup label="Event">
+                <option *ngFor="let compField of condition.fields.event" value="{{compField.value}}">{{compField.name}}</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="col-lg-3">
+            <select class="form-control" [(ngModel)]="condition.selected_operator" (change)="initDatePcker(i)">
+              <option *ngFor="let operator of condition.operators[condition.selected_field]; let i = index" value="{{operator}}">{{operator}}</option>
+            </select>
+          </div>
+          <div class="col-lg-3">
+            <input type="text" *ngIf="['event_name','description'].includes(condition.selected_field)" class="form-control" [(ngModel)]="condition.stringValue"
+            />
+            <angular2-multiselect *ngIf="['event_type'].includes(condition.selected_field) && ['includes', 'does not include'].includes(condition.selected_operator)"
+              [data]="condition.multiselectItems[condition.selected_field]" [(ngModel)]="condition.multiSelectSelected" [settings]="multiSelectSettings">
+            </angular2-multiselect>
+            <select class="form-control" [(ngModel)]="condition.stringValue" *ngIf="['event_type'].includes(condition.selected_field) && !['includes', 'does not include'].includes(condition.selected_operator)">
+              <option *ngFor="let item of condition.multiselectItems[condition.selected_field]" value="{{item.id}}">
+                {{item.itemName}}
+              </option>
+            </select>
+            <input type="text" *ngIf="[ 'createdAt', 'launch_date'].includes(condition.selected_field)" class="form-control {{'dpkr_' + i}}"
+              [(ngModel)]="condition.numberValue.value1" />
+          </div>
+          <!-- <div class="col-md-2">
+            <input type="text" *ngIf="condition.selected_operator == 'between' && ['current_limit.users', 'current_limit.companies', 'current_limit.calculators'].includes(condition.selected_field)"
+              class="form-control" [(ngModel)]="condition.numberValue.value2" />
+          </div> -->
+        </div>
+
+        <div class="row mt-2">
+          <div class="col-lg-1">
+            <button class="btn btn-default btn-xs" (click)="addCondition()">
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+          <div class="col-lg-11">
+            <button class="btn btn-success" (click)="applyFilter()">
+              Apply Filter
+            </button>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-lg-12" *ngIf="totalCount">
+        <div class="text-right" *ngIf="totalCount">
+          Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit)
+          > totalCount)? totalCount : current_page * current_limit}} of {{totalCount}}
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getEvents()">
+              <i class="fa fa-angle-left"></i>
+            </button>
+            <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getEvents()">
+              <i class="fa fa-angle-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="block row">
+          <div class="table-responsive">
+
+            <table class="table table-striped table-hover">
+              <thead *ngIf="totalCount">
+                <tr>
+                  <th>Event Name</th>
+                  <th>Description</th>
+                  <th>Media</th>
+                  <th>Event Type</th>
+                  <th>Launch Date</th>
+                  <th>Launch time</th>
+                  <th>Created At</th>
+                  <th scope="row">Edit</th>
+                  <th scope="row">Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngIf="!loadingEvents">
+                  <tr *ngFor="let event of events;let i=index">
+                    <td>{{event.event_name}}</td>
+                    <td>{{event.description}}</td>
+                    <td>
+                      <img width="100px" [src]="event.media" alt="not found" />
+                    </td>
+                    <td>{{event?.event_type}}</td>
+                    <td>{{event?.launch_date ? mt(event?.launch_date).format('DD-MM-YYYY') : '----'}}</td>
+                    <td>{{event?.launch_time}} (IST)</td>
+                    <td>{{event?.createdAt ? mt(event?.createdAt).format('DD-MM-YYYY kk:mm') : '----'}}</td>
+                    <th scope="row">
+                      <a href="javascript:void(0);" data-toggle="modal" data-target="#add-event" (click)="editEvent(i)">
+                        <i class="fa fa-eye"></i>
+                      </a>
+                    </th>
+                    <th scope="row">
+                      <a href="javascript:void(0);" (click)="removeEvent(event,i)">
+                        <i class="fa fa-trash"></i>
+                      </a>
+                    </th>
+                  </tr>
+                </ng-container>
+                <ng-container *ngIf="!loadingEvents && totalCount==0">
+                  <tr>
+                    <th colspan="6" scope="row" class="text-center">
+                      No record found
+                    </th>
+                  </tr>
+                </ng-container>
+                <ng-container *ngIf="loadingEvents">
+                  <tr>
+                    <th colspan="6" scope="row" class="text-center">
+                      <i class="fa fa-spinner fa-5x fa-spin"></i>
+                    </th>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12" *ngIf="totalCount">
+        <div class="text-right">
+          Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit)
+          > totalCount)? totalCount : current_page * current_limit}} of {{totalCount}}
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getEvents()">
+              <i class="fa fa-angle-left"></i>
+            </button>
+            <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getEvents()">
+              <i class="fa fa-angle-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div id="add-event" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content modal-bg">
+      <div class="modal-header">
+        <button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close">
+          <i class="fa fa-close" aria-hidden="true"></i>
+        </button>
+        <h5 class="modal-title">{{edit? 'Update Event': 'Add a New Event'}}</h5>
+      </div>
+      <div class="modal-body">
+        <!-- <div>
+          <div><img src="assets/images/logoAnim.gif" alt="loading..." id="imgLoad"></div>
+        </div> -->
+        <div>
+          <div class="alert alert-danger custom-alert" *ngIf="errorMessage">{{errorMessage}}</div>
+          <form id="addEventForm" [formGroup]="eventForm">
+            <div class="form-group label-floating">
+              <label class="control-label" for="event_name">Event Name</label>
+              <input class="form-control" id="event_name" type="text" name="event_name" formControlName="event_name">
+              <div class="er-msg" *ngIf="eventForm.controls.event_type.dirty && !eventForm.controls.event_type.valid">
+                Please enter event name
+              </div>
+            </div>
+            <div class="form-group label-floating">
+              <label class="control-label" for="description">Description</label>
+              <textarea class="form-control" id="description" type="text" name="description" rows="3" formControlName="description"></textarea>
+              <div class="er-msg" *ngIf="eventForm.controls.description.dirty && !eventForm.controls.description.valid">
+                150 characters supported only
+              </div>
+            </div>
+            <div class="form-group label-floating">
+              <label class="control-label" for="media">Event Media</label>
+              <div *ngIf="!loader">
+                <input class="form-control" id="media" type="text" name="media" [readonly]="'true'" formControlName="media">
+                <img #imgSrc/>
+                <input type="file" (change)="upload($event.target.files,imgSrc);" #fileUpload style="display:none;" />
+                <button (click)="fileUpload.click()">Upload Gif</button>
+              </div>
+              <div *ngIf="loader">
+                <img src="assets/images/logoAnim.gif" alt="loading..." id="imgLoad">
+              </div>
+              <div class="er-msg" *ngIf="!eventForm.controls.media.valid">
+                Please enter event gif url
+              </div>
+            </div>
+            <div class="form-group label-floating">
+              <label class="control-label" for="event_type">Event_type</label>
+              <select class="form-control" id="event_type" name="event_type" formControlName="event_type">
+                <option [value]="'standard'" selected>Standard</option>
+                <option [value]="'premium'">Premium</option>
+              </select>
+              <div class="er-msg" *ngIf="eventForm.controls.event_type.dirty && !eventForm.controls.event_type.valid">
+                Please select event_type
+              </div>
+            </div>
+            <!-- <div class="form-group label-floating">
+                <label class="control-label" for="launch_date">Launch Date</label>
+                <og-date-picker *ngIf="scriptLoaded" (date)="setLaunchDate($event)">
+                </og-date-picker>
+                <div class="er-msg" *ngIf="eventForm.controls.launch_date.dirty && !eventForm.controls.launch_date.valid">
+                  Please select event launch date
+                </div>
+              </div> -->
+
+            <div class="form-group label-floating">
+              <label class="control-label" for="launch_time">Choose a Launch time: </label>
+              <input class="form-control" id="launch_time" type="time" name="launch_time" formControlName="launch_time">
+            </div>
+
+            <button *ngIf="!edit" #saveButton (click)="createEvent(eventForm.value,saveButton)" class="btn btn btn-red-outline btn-add-event btn-hover"
+              id="createEvent" [disabled]="!eventForm.valid">Add</button>
+            <button *ngIf="edit" #updateButton (click)="updateEvent(eventForm.value,updateButton)" class="btn btn btn-red-outline btn-add-event btn-hover"
+              id="updateEvent" [disabled]="!eventForm.valid">Update</button>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>

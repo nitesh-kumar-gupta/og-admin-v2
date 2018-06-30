@@ -1,3 +1,205 @@
-<p>
-  team-detail works!
-</p>
+<section class="padding-top">
+  <div class="container-fluid">
+    <div class="row toppad">
+      <div class="col-lg-12">
+        <a href="javascript:void(0);" class="btn btn-default pull-right" id="btnAdduser" data-toggle="modal" data-target="#modalAddUser"
+          *ngIf="userLimit == -1 || team?team.length:0 < userLimit">Add Member</a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 toppad">
+        <div class="panel">
+          <div class="panel-heading">
+            <h5 class="panel-title">Team Details
+              <i class="fa pull-right" [class.fa-edit]="!editMode" [class.fa-long-arrow-left]="editMode" (click)="editBack()"></i>
+            </h5>
+            <!-- <div>
+              <a style="float: left !important; margin-left: 20px;color: #fff; margin-top:7px;" href="javascript:void(0)" class="pull-right"
+                data-toggle="modal" data-target="#modalAddUser" *ngIf="userLimit == -1 || team?team.length:0 < userLimit">
+                <i class="fa fa-plus"></i>
+              </a>
+            </div> -->
+
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class=" col-md-12 col-lg-12 ">
+                <table class="table table-user-information">
+                  <thead>
+                    <tr>
+                      <th>
+                        Name
+                      </th>
+                      <th>
+                        Role
+                      </th>
+                      <th>
+                        Status
+                      </th>
+                      <th>
+                        Active
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody *ngIf="editMode">
+                    <tr *ngFor="let t of updateTeam">
+                      <td>
+                        <input class="form-input" type="text" [(ngModel)]="t.name" />
+                      </td>
+                      <td>
+                        <select [(ngModel)]="t.user_company.role">
+                          <option *ngFor="let role of roleEnum">{{role}}</option>
+                        </select>
+                      </td>
+                      <td>
+                        <select [(ngModel)]="t.user_company.status">
+                          <option *ngFor="let status of statusEnum">{{status}}</option>
+                        </select>
+                      </td>
+                      <td>
+                        <select [(ngModel)]="t.user_company.active">
+                          <option>true</option>
+                          <option>false</option>
+                        </select>
+                      </td>
+                    </tr>
+
+                    <button id="btn-saveCompany" class="btn btn-primary mb-1 btn-block" (click)="updateTeamInfo($event.target)">Update</button>
+
+                  </tbody>
+                  <tbody *ngIf="!editMode">
+                    <tr *ngFor="let t of team">
+                      <td>
+                        <a [routerLink]="['/admin/user/',t._id]">{{t.name}}</a>
+                      </td>
+                      <td>
+                        {{t.user_company.role}}
+                      </td>
+                      <td>
+                        {{t.user_company.status}}
+                      </td>
+                      <td>
+                        {{t.user_company.active}}
+                      </td>
+                      <td>
+                        <a href="javascript:void(0)" (click)="deleteUser(t)">
+                          <i class="fa fa-trash"></i>
+                        </a>
+                      </td>
+                      <td *ngIf="t.user_company.status!='APPROVED'" style="cursor: pointer;">
+                        <a (click)="approve(t._id)">Approve</a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="panel-footer text-right">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<div class="modal fade" id="modalDelUserConfirm" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="glyphicon glyphicon-trash"></i> Remove User</h5>
+        <a title="close" href="#" data-dismiss="modal" aria-label="Close">
+          <i class="fa fa-close pull-right"></i>
+        </a>
+      </div>
+      <div class="modal-body" *ngIf="delUser">
+        Are You Sure you want to delete user {{delUser.name}}
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-blue btn-red" id="confirmNo" data-dismiss="modal" aria-label="Close">No</button>
+        <button class="btn btn-blue btn-red" id="confirmYes" (click)="deleteConfirmed()">Yes</button>
+        <div class="alert alert-danger" style="display: block" *ngIf="error != ''">
+          {{error}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalAddUser" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fa fa-plus"></i> Add User</h5>
+        <a title="close" href="#" data-dismiss="modal" aria-label="Close">
+          <i class="fa fa-close pull-right"></i>
+        </a>
+      </div>
+      <div class="modal-body">
+        <div class="sahil-material">
+          <form name="formAddMember" [formGroup]="formAddMember" id="formAddMember" (ngSubmit)="addNewMember()">
+            <div class="form-group label-floating" [class.is-empty]="!formAddMember.value.memberName">
+              <label class="control-label" for="memberName">Member Name</label>
+              <input class="form-control" formControlName="memberName" id="memberName" type="text" name="memberName">
+            </div>
+            <div *ngIf="formAddMember.controls.memberName.touched && !formAddMember.controls.memberName.valid" class="alert alert-danger">
+              <p *ngIf="formAddMember.controls.memberName.errors.required">
+                <span class="mat-icon">
+                  <i class="material-icons">report_problem</i>
+                </span>
+                Name is required.
+              </p>
+              <p *ngIf="formAddMember.controls.memberName.errors.minlength">
+                <span class="mat-icon">
+                  <i class="material-icons">report_problem</i>
+                </span>
+                Min 3 character is required.
+              </p>
+            </div>
+            <div class="form-group label-floating" [class.is-empty]="!formAddMember.value.memberEmail">
+              <label class="control-label" for="memberEmail">Member Email</label>
+              <input class="form-control" formControlName="memberEmail" id="memberEmail" type="email" name="memberEmail">
+            </div>
+            <div *ngIf="formAddMember.controls.memberEmail.touched && !formAddMember.controls.memberEmail.valid" class="alert alert-danger">
+              <p *ngIf="formAddMember.controls.memberEmail.errors.required">
+                <span class="mat-icon">
+                  <i class="material-icons">report_problem</i>
+                </span>
+                Email is required.
+              </p>
+              <p *ngIf="formAddMember.controls.memberEmail.errors.checkmail">
+                <span class="mat-icon">
+                  <i class="material-icons">report_problem</i>
+                </span>
+                Invalid email
+              </p>
+            </div>
+            <div class="form-group form-group-radio">
+              <label>
+                <input [checked]="formAddMember.value.memberRole == 'ADMIN'" type="radio" formControlName="memberRole" id="memberRoleAdmin"
+                  value="ADMIN" name="memberRole">
+                <label for="memberRoleAdmin"> Admin </label>
+              </label>
+              <label>
+                <input [checked]="formAddMember.value.memberRole == 'MANAGER'" type="radio" formControlName="memberRole" id="memberRoleManager"
+                  value="MANAGER" name="memberRole" checked>
+                <label for="memberRoleManager"> Manager </label>
+              </label>
+            </div>
+            <button type="submit" [disabled]="!formAddMember.valid" class="btn btn-blue btn-red" id="btnAddMember">Add
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="alert alert-danger" style="display: block" *ngIf="error != ''">
+          {{error}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

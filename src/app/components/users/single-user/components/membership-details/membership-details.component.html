@@ -1,0 +1,179 @@
+<section class="padding-top">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-6 toppad">
+        <div class="panel">
+          <div class="panel-heading">
+            <h5>Membership Details</h5>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class=" col-md-12 col-lg-12 ">
+                <table class="table table-user-information">
+                  <tbody>
+                    <tr>
+                      <td>
+                        Companies:
+                      </td>
+                      <td>
+                        <select (change)="refreshCompanyDetail()" [(ngModel)]="companyId">
+                          <option *ngFor="let company of companies" [value]="company._id">{{company.name}}</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Current Plan:</td>
+                      <td>
+                        {{plan==null?'NA':plan}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Started on:</td>
+                      <td>
+                        {{start_date==null?'NA':start_date}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Trial Start:</td>
+                      <td>
+                        {{trial_start}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Trial End:</td>
+                      <td>
+                        {{trial_end}}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="panel-footer text-right">
+            <button id="btn-saveUser" class="btn btn-primary mb-1 btn-block" (click)="saveUserChanges()" *ngIf="edit">Save</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 toppad">
+        <div class="panel">
+          <div class="panel-heading">
+            <h5>Billing Details</h5>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class=" col-md-12 col-lg-12 ">
+                <table class="table table-user-information">
+                  <tbody>
+                    <tr>
+                      <td>Card Type</td>
+                      <td>
+                        {{card?.card_type}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Customer ID</td>
+                      <td>
+                        {{card?.customer_id}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Expiry Month</td>
+                      <td>
+                        {{card?.expiry_month}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Expiry Year</td>
+                      <td>
+                        {{card?.expiry_year}}
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>Masked No</td>
+                      <td>{{card?.masked_number}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="panel-footer">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 toppad">
+        <div class="panel">
+          <div class="panel-heading">
+            <h5 class="panel-title">
+              Invoices
+            </h5>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class=" col-md-12 col-lg-12 ">
+                <table class="table table-user-information">
+                  <thead>
+                    <tr>
+                      <th>Invoice No.</th>
+                      <th>Date</th>
+                      <th>Amount</th>
+                      <th>Paid Via</th>
+                      <th>Download</th>
+                    </tr>
+                  </thead>
+                  <tbody *ngFor="let invoice of invoices" value="invoice">
+                    <tr *ngIf="isInvoiceExist">
+                      <td>{{invoice.invoiceNo}}</td>
+                      <td class="text-opacity">{{invoice.date}} </td>
+                      <td>$ {{invoice.amount_paid/100}} </td>
+                      <td class="text-opacity">Credit Card</td>
+                      <td>
+                        <a href="{{invoice.href}}" class="invoiceId pdf-download" target="_blank">
+                          PDF
+                          <!-- <i class="material-icons">file_download</i> -->
+                        </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tbody>
+                    <tr *ngIf="!isInvoiceExist">
+                      <td></td>
+                      <td></td>
+                      <td colspan="5" class="no-invoice">
+                        No Invoice has been raised
+                      </td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="panel-footer">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- <div id="compCouponDetail" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Coupon Detail</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" *ngIf="viewCoupon">
+        <div *ngFor="let key of generateKeys(viewCoupon)">
+          <p>
+            <span>{{ key + ' :- ' }}</span> {{viewCoupon[key] | json}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->

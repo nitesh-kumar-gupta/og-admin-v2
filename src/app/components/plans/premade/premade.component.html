@@ -1,0 +1,28 @@
+<section class="padding-top">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12 toppad ">
+        <div class="panel">
+          <div class="panel-heading">
+            <h5 class="panel-title">Premade templates access
+              <i class="fa pull-right" [class.fa-edit]="!edit" [class.fa-long-arrow-left]="edit" (click)="editBack()"></i>
+            </h5>
+          </div>
+          <div *ngIf="edit" class="panel-body">
+            <div class="row">
+              <div class=" col-md-12 col-lg-12 ">
+                <table class="table table-user-information">
+                  <feature-layout-manager [features]="templates" [info]="componentInfo" (changes)="pushChanges($event)"></feature-layout-manager>
+                  <div class="panel-footer text-right">
+                    <button id="btn-saveUser" class="btn btn-primary mb-1 btn-block" (click)="updateCalcs(changedFeatures)">Update</button>
+                  </div>
+                  <div style="color:red;font-size:12px;" *ngIf="errorMessage">{{errorMessage}}</div>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

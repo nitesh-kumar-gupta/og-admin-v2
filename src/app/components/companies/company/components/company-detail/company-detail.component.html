@@ -24,17 +24,18 @@
                     <tr>
                       <td>Name:</td>
                       <td *ngIf="!edit">
-                        {{company?.name}} <span *ngIf="!company?.parent_company"> (Parent Company)</span>
+                        {{company?.name}}
+                        <span *ngIf="!company?.parent_company"> (Parent Company)</span>
                       </td>
                       <td *ngIf="edit">
-                        <input type="text" class="form-control" id="comp_name" [(ngModel)]="editCompany.name"/>
+                        <input type="text" class="form-control" id="comp_name" [(ngModel)]="editCompany.name" />
                       </td>
                     </tr>
                     <tr>
                       <td>Sub-domain:</td>
                       <td *ngIf="!edit">{{company?.sub_domain}}</td>
                       <td *ngIf="edit">
-                        <input type="text" class="form-control" id="comp_sub_domain" [(ngModel)]="editCompany.sub_domain"/>
+                        <input type="text" class="form-control" id="comp_sub_domain" [(ngModel)]="editCompany.sub_domain" />
                       </td>
                     </tr>
                     <tr>
@@ -89,32 +90,39 @@
                       <td>LeadDyno</td>
                       <td>
                         <div class="i-checks">
-                          <input id="comp_leaddyno" type="radio" value="LEADDYNO" name="referralProg" [checked]="editCompany.current_referral_program == 'LEADDYNO'" [(ngModel)]="editCompany.current_referral_program" class="radio-template">
+                          <input id="comp_leaddyno" type="radio" value="LEADDYNO" name="referralProg" [checked]="editCompany.current_referral_program == 'LEADDYNO'"
+                            [(ngModel)]="editCompany.current_referral_program" class="radio-template">
                         </div>
                         <small *ngIf="editCompany.current_referral_program == 'LEADDYNO'">Referral URL</small>
-                        <input type="text" class="form-control" id="comp_name" *ngIf="editCompany.current_referral_program == 'LEADDYNO'" [(ngModel)]="editCompany.referral.leaddyno_url"/>
+                        <input type="text" class="form-control" id="comp_name" *ngIf="editCompany.current_referral_program == 'LEADDYNO'" [(ngModel)]="editCompany.referral.leaddyno_url"
+                        />
                       </td>
                     </tr>
                     <tr *ngIf="edit">
                       <td>Referral Candy</td>
                       <td>
                         <div class="i-checks">
-                          <input id="comp_referralcandy" type="radio" value="REFERRALCANDY" name="referralProg" [checked]="editCompany.current_referral_program == 'REFERRALCANDY'" [(ngModel)]="editCompany.current_referral_program" class="radio-template">
+                          <input id="comp_referralcandy" type="radio" value="REFERRALCANDY" name="referralProg" [checked]="editCompany.current_referral_program == 'REFERRALCANDY'"
+                            [(ngModel)]="editCompany.current_referral_program" class="radio-template">
                         </div>
                         <small *ngIf="editCompany.current_referral_program == 'REFERRALCANDY'">Referral URL</small>
-                        <input type="text" class="form-control" id="comp_name" *ngIf="editCompany.current_referral_program == 'REFERRALCANDY'" [(ngModel)]="editCompany.referral.referralcandy_url"/>
+                        <input type="text" class="form-control" id="comp_name" *ngIf="editCompany.current_referral_program == 'REFERRALCANDY'" [(ngModel)]="editCompany.referral.referralcandy_url"
+                        />
                         <small *ngIf="editCompany.current_referral_program == 'REFERRALCANDY'">Sharing URL</small>
-                        <input type="text" class="form-control" id="comp_name" *ngIf="editCompany.current_referral_program == 'REFERRALCANDY'" [(ngModel)]="editCompany.referral.sharing_url"/>
+                        <input type="text" class="form-control" id="comp_name" *ngIf="editCompany.current_referral_program == 'REFERRALCANDY'" [(ngModel)]="editCompany.referral.sharing_url"
+                        />
                       </td>
                     </tr>
                     <tr *ngIf="edit">
                       <td>GrowSumo</td>
                       <td>
                         <div class="i-checks">
-                          <input id="comp_growsumo" type="radio" value="GROWSUMO" name="referralProg" [checked]="editCompany.current_referral_program == 'GROWSUMO'" [(ngModel)]="editCompany.current_referral_program" class="radio-template">
+                          <input id="comp_growsumo" type="radio" value="GROWSUMO" name="referralProg" [checked]="editCompany.current_referral_program == 'GROWSUMO'"
+                            [(ngModel)]="editCompany.current_referral_program" class="radio-template">
                         </div>
                         <small *ngIf="editCompany.current_referral_program == 'GROWSUMO'">Referral URL</small>
-                        <input type="text" class="form-control" id="comp_name" *ngIf="editCompany.current_referral_program == 'GROWSUMO'" [(ngModel)]="editCompany.referral.growsumo_url"/>
+                        <input type="text" class="form-control" id="comp_name" *ngIf="editCompany.current_referral_program == 'GROWSUMO'" [(ngModel)]="editCompany.referral.growsumo_url"
+                        />
                       </td>
                     </tr>
                     <tr>
@@ -150,19 +158,19 @@
                           <li>url:
                             <span *ngIf="!edit">{{(company?.cname.url) ? company?.cname.url : 'NOT SET'}}</span>
                             <span *ngIf="edit">
-                              <input type="text" class="form-control" id="comp_url" [(ngModel)]="editCompany.cname.url"/>
+                              <input type="text" class="form-control" id="comp_url" [(ngModel)]="editCompany.cname.url" />
                             </span>
                           </li>
                           <li>Root url:
                             <span *ngIf="!edit">{{(company?.cname.root_url) ? company?.cname.error_url : 'NOT SET'}}</span>
                             <span *ngIf="edit">
-                              <input type="text" class="form-control" id="comp_root_url" [(ngModel)]="editCompany.cname.root_url"/>
+                              <input type="text" class="form-control" id="comp_root_url" [(ngModel)]="editCompany.cname.root_url" />
                             </span>
                           </li>
                           <li>Error url:
                             <span *ngIf="!edit">{{(company?.cname.error_url) ? company?.cname.error_url : 'NOT SET'}}</span>
                             <span *ngIf="edit">
-                              <input type="text" class="form-control" id="comp_error_url" [(ngModel)]="editCompany.cname.error_url"/>
+                              <input type="text" class="form-control" id="comp_error_url" [(ngModel)]="editCompany.cname.error_url" />
                             </span>
                           </li>
                         </ul>
@@ -190,49 +198,52 @@
                       <td>Calculators</td>
                       <td *ngIf="!edit">{{(company?.current_limit.calculators == -1)? 'UNLIMITED' : company?.current_limit.calculators}}</td>
                       <td *ngIf="edit">
-                        <input type="text" class="form-control" id="comp_calculators" [(ngModel)]="editCompany.current_limit.calculators"/>
+                        <input type="text" class="form-control" id="comp_calculators" [(ngModel)]="editCompany.current_limit.calculators" />
                       </td>
                     </tr>
                     <tr>
                       <td>Users</td>
                       <td *ngIf="!edit">{{(company?.current_limit.users == -1)? 'UNLIMITED' : company?.current_limit.users}}</td>
                       <td *ngIf="edit">
-                        <input type="text" class="form-control" id="comp_users" [(ngModel)]="editCompany.current_limit.users"/>
+                        <input type="text" class="form-control" id="comp_users" [(ngModel)]="editCompany.current_limit.users" />
                       </td>
                     </tr>
                     <tr>
                       <td>Companies</td>
                       <td *ngIf="!edit">{{(company?.current_limit.companies == -1)? 'UNLIMITED' : company?.current_limit.companies}}</td>
                       <td *ngIf="edit">
-                        <input type="text" class="form-control" id="comp_companies" [(ngModel)]="editCompany.current_limit.companies"/>
+                        <input type="text" class="form-control" id="comp_companies" [(ngModel)]="editCompany.current_limit.companies" />
                       </td>
                     </tr>
                     <tr>
                       <td>Child Intercom Id</td>
                       <td *ngIf="!edit">{{(company?.child_intercom_id)? 'UNLIMITED' : 'NOT SET'}}</td>
                       <td *ngIf="edit">
-                        <input type="text" class="form-control" id="comp_child_intercom_id" [(ngModel)]="editCompany.child_intercom_id"/>
+                        <input type="text" class="form-control" id="comp_child_intercom_id" [(ngModel)]="editCompany.child_intercom_id" />
                       </td>
                     </tr>
                     <tr>
                       <td>Chargebee Customer Id</td>
                       <td *ngIf="!edit">{{company?.billing.chargebee_customer_id}}</td>
                       <td *ngIf="edit">
-                        <input type="text" class="form-control" id="comp_chargebee_customer_id" [(ngModel)]="editCompany.billing.chargebee_customer_id"/>
+                        <input type="text" class="form-control" id="comp_chargebee_customer_id" [(ngModel)]="editCompany.billing.chargebee_customer_id"
+                        />
                       </td>
                     </tr>
                     <tr>
                       <td>Chargebee Subscription Id</td>
                       <td *ngIf="!edit">{{company?.billing.chargebee_subscription_id}}</td>
                       <td *ngIf="edit">
-                        <input type="text" class="form-control" id="comp_chargebee_subscription_id" [(ngModel)]="editCompany.billing.chargebee_subscription_id"/>
+                        <input type="text" class="form-control" id="comp_chargebee_subscription_id" [(ngModel)]="editCompany.billing.chargebee_subscription_id"
+                        />
                       </td>
                     </tr>
                     <tr>
                       <td>Stripe Customer Id</td>
                       <td *ngIf="!edit">{{(company?.billing.stripe_customer_id) ? company?.billing.stripe_customer_id : 'NOT SET'}}</td>
                       <td *ngIf="edit">
-                        <input type="text" class="form-control" id="comp_stripe_customer_id" [(ngModel)]="editCompany.billing.stripe_customer_id"/>
+                        <input type="text" class="form-control" id="comp_stripe_customer_id" [(ngModel)]="editCompany.billing.stripe_customer_id"
+                        />
                       </td>
                     </tr>
                     <tr>
@@ -245,7 +256,8 @@
                           </option>
                         </select>
                         <ng-container *ngIf="editCompany.billing.chargebee_plan_id != company.billing.chargebee_plan_id">
-                          *Immediate Change: <div class="i-checks">
+                          *Immediate Change:
+                          <div class="i-checks">
                             <input type="checkbox" id="comp_immediatePlanChange" class="checkbox-template" [(ngModel)]="immediateChange">
                           </div>
                         </ng-container>
@@ -360,7 +372,8 @@
       </div>
       <div class="modal-body" *ngIf="viewCoupon">
         <div *ngFor="let key of generateKeys(viewCoupon)">
-          <p><span>{{ key + ' :- ' }}</span> {{viewCoupon[key] | json}}</p>
+          <p>
+            <span>{{ key + ' :- ' }}</span> {{viewCoupon[key] | json}}</p>
         </div>
       </div>
     </div>

@@ -20,8 +20,11 @@
         <div class="list-inline-item">
           <a href="javascript:void(0)" class="nav-link">Success Rate <i class="fa fa-line-chart"></i></a>
         </div>
-        <div class="list-inline-item">
+        <div class="list-inline-item"  [routerLink]="['/admin/searchcalc']">
           <a href="javascript:void(0)" class="nav-link">Apps <i class="fa fa-flask"></i></a>
+        </div>
+        <div class="list-inline-item"  routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          <a href="javascript:void(0)" class="nav-link" routerLink="events">Events <i class="fa fa-calendar"></i></a>
         </div>
         <div class="list-inline-item logout">
           <a id="logout" href="javascript:void(0)" (click)="logout()" class="nav-link">Logout <i class="fa fa-power-off"></i></a>

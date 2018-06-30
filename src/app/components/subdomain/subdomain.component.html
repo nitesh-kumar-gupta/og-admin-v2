@@ -1,0 +1,33 @@
+<div class="page-header">
+  <div class="container-fluid">
+    <h2 class="h5 no-margin-bottom">Sub-Domain</h2>
+  </div>
+</div>
+<section class="no-padding-bottom">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <ul id="clothing-nav" class="nav nav-tabs" role="tablist">
+          <li class="nav-item" class="col-md-6">
+            <a class="nav-link active" href="#reserve-domain" id="reserve-domain-tab" role="tab" data-toggle="tab" aria-controls="reserve-domain"
+              aria-expanded="true">
+              RESERVED SUB DOMAIN
+            </a>
+          </li>
+          <li class="nav-item" class="col-md-6">
+            <a class="nav-link" href="#premium-domain" role="tab" id="premium-domain-tab" data-toggle="tab" aria-controls="premium-domain">
+              PREMIUM SUB DOMAIN
+            </a>
+        </ul>
+        <div id="clothing-nav-content" class="tab-content">
+          <div role="tabpanel" class="tab-pane fade show active" id="reserve-domain" aria-labelledby="reserve-domain-tab">
+            <app-domain [category]="'RESERVED'"></app-domain>
+          </div>
+          <div role="tabpanel" class="tab-pane fade" id="premium-domain" aria-labelledby="premium-domain-tab">
+            <app-domain [category]="'PREMIUM'"></app-domain>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

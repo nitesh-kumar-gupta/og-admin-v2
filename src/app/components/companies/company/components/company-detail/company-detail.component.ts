@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { AdminService } from '../../../../../services/admin.service';
-import {forkJoin} from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { Company } from '../../../../../models/company.model';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
@@ -36,6 +36,7 @@ export class CompanyDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    console.log(this.companyId)
     if (this.companyId) {
       this.subscribes.push(this.getCompanyDetails());
       this.subscribes.push(this.getPlanTypes());
@@ -107,16 +108,25 @@ export class CompanyDetailComponent implements OnInit, OnDestroy {
     login.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
     if (!_.isEqual(this.company, this.editCompany)) {
       this.adminService.updateCompany(this.editCompany, this.immediateChange).subscribe((success: any) => {
-
+        login.disabled = false;
+        login.innerHTML = 'Save';
+        this.editBack();
       }, (error: any) => {
         console.error('saveCompanyChanges error comp ', error);
+        login.disabled = false;
+        login.innerHTML = 'Save';
       });
+    }
+    else {
+      login.disabled = false;
+      login.innerHTML = 'Save';
     }
     if (!_.isEqual(this.companyFeature, this.tempComp.companyFeature)) {
     }
   }
 
   editBack() {
+    this.getCompanyDetails()
     this.edit = !this.edit;
     this.editCompany = new Company(this.tempComp.company);
     this.companyFeature = JSON.parse(JSON.stringify(this.tempComp.companyFeature));

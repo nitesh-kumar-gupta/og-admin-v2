@@ -1,0 +1,305 @@
+<div class="page-header">
+  <div class="container-fluid">
+    <h2 class="h5 no-margin-bottom">Users</h2>
+  </div>
+</div>
+<section class="no-padding-bottom">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-6 text-left" *ngIf="totalCount">
+        <button class="btn" (click)="showFilters()">
+          <i class="fa fa-filter"></i>{{showFilter ? 'Hide Filter' : 'Show Filter' }}
+        </button>
+      </div>
+      <div class="col-lg-6">
+        <a href="javascript:void(0);" class="btn btn-default pull-right" id="btnAdduser" data-toggle="modal" data-target="#add-user"
+          (click)="addUserForm.reset();">Add User</a>
+      </div>
+      <!-- Place for filters -->
+      <div class="col-lg-12 block mt-1" *ngIf="showFilter">
+        <div class="row mb-1" *ngFor="let condition of conditions; let i = index">
+          <div class="col-lg-1">
+            <button class="btn btn-danger btn-xs" (click)="removeCondition(i)" [disabled]="conditions.length == 1">
+              <i class="fa fa-minus"></i>
+            </button>
+          </div>
+          <div class="col-lg-3">
+            <select class="form-control" [(ngModel)]="condition.selected_field" (change)="condition.stringValue = ''; condition.multiSelectSelected = []; initDatePcker(i)">
+              <optgroup label="User">
+                <option *ngFor="let compField of condition.fields.user" value="{{compField.value}}">{{compField.name}}</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="col-lg-3">
+
+            <div *ngIf="['name', 'location', 'email', 'phone','session_count', 'createdAt'].includes(condition.selected_field)">
+              <select class="form-control" [(ngModel)]="condition.selected_operator" (change)="initDatePcker(i)">
+                <option *ngFor="let operator of condition.operators[condition.selected_field]; let i = index" value="{{operator}}">{{operator}}</option>
+              </select>
+            </div>
+            <div *ngIf="['active', 'can_create_new_company', 'is_admin_created'].includes(condition.selected_field)">
+              <select class="form-control" [(ngModel)]="condition.selected_operator">
+                <option *ngFor="let operator of condition.operators[condition.selected_field]; let i = index" value="{{operator}}">{{operator}}</option>
+              </select>
+            </div>
+
+          </div>
+          <div class="col-lg-3">
+            <input type="text" *ngIf="['name', 'location', 'email', 'phone'].includes(condition.selected_field)" class="form-control"
+              [(ngModel)]="condition.stringValue" />
+            <!-- <angular2-multiselect
+              *ngIf="['deal_refered', 'current_referral_program', 'parent_company', 'is_admin_created', 'agency', 'remove_leads_after_saving', 'GDPR', 'billing.chargebee_plan_id', 'billing.chargebee_subscription_status', 'billing.customer_card_status', 'previousPlan.plan_id', 'previousPlan.subscription_status'].includes(condition.selected_field) && ['includes', 'does not include'].includes(condition.selected_operator)"
+              [data]="condition.multiselectItems[condition.selected_field]"
+              [(ngModel)]="condition.multiSelectSelected"
+              [settings]="multiSelectSettings">
+            </angular2-multiselect> -->
+            <!-- <select class="form-control" [(ngModel)]="condition.stringValue" *ngIf="['is_admin_created','can_create_new_company','active'].includes(condition.selected_field) && !['includes', 'does not include'].includes(condition.selected_operator)" [(ngModel)]="condition.selectItem">
+              <option *ngFor="let item of condition.selectItem[condition.selected_field]" value="{{item.id}}">
+                {{item.itemName}}
+              </option>
+            </select> -->
+            <input type="text" *ngIf="['session_count', 'createdAt'].includes(condition.selected_field)" class="form-control {{'dpkr_' + i}}"
+              [(ngModel)]="condition.numberValue.value1" />
+          </div>
+          <div class="col-md-2">
+            <input type="text" *ngIf="condition.selected_operator == 'between' && ['session_count'].includes(condition.selected_field)"
+              class="form-control" [(ngModel)]="condition.numberValue.value2" />
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col-lg-1">
+            <button class="btn btn-default btn-xs" (click)="addCondition()">
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+          <div class="col-lg-11">
+            <button class="btn btn-success" (click)="applyFilter()">
+              Apply Filter
+            </button>
+          </div>
+        </div>
+
+      </div>
+      <!-- End of filters -->
+      <div class="col-lg-12" *ngIf="totalCount">
+        <div class="text-right">
+          Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit)
+          > totalCount)? totalCount : current_page * current_limit}} of {{totalCount}}
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getAllUsers()">
+              <i class="fa fa-angle-left"></i>
+            </button>
+            <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getAllUsers()">
+              <i class="fa fa-angle-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="block row">
+          <div class="table-responsive">
+            <table *ngIf="!loadingUsers" class="table table-striped table-hover">
+              <thead *ngIf="totalCount">
+                <tr>
+                  <th>
+                    Name
+                  </th>
+                  <th>
+                    Phone
+                  </th>
+                  <th>
+                    Location
+                  </th>
+                  <th>
+                    Email
+                  </th>
+                  <th>
+                    Last Login
+                  </th>
+                  <th>
+                    Edit
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngIf="!loadingUsers">
+                  <tr *ngFor="let user of data">
+                    <td>
+                      {{user.name}}
+                    </td>
+                    <td>
+                      {{user.phone}}
+                    </td>
+                    <td>
+                      {{user.location}}
+                    </td>
+                    <td>
+                      {{user.emails[0].email}}
+                    </td>
+                    <td>
+                      {{dateFormat(user.last_login)}}
+                    </td>
+                    <td>
+                      <a [routerLink]="['/admin/user',user._id]">
+                        <i class="fa fa-eye" style="font-size: 22px;" data-original-title="Edit"></i>
+                      </a>
+                    </td>
+                  </tr>
+                </ng-container>
+                <ng-container *ngIf="!loadingUsers && totalCount == 0">
+                  <tr>
+                    <th colspan="6" scope="row" class="text-center">
+                      No record found
+                    </th>
+                  </tr>
+                </ng-container>
+                <ng-container *ngIf="loadingUsers">
+                  <tr>
+                    <th colspan="6" scope="row" class="text-center">
+                      <i class="fa fa-spinner fa-5x fa-spin"></i>
+                    </th>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12" *ngIf="totalCount">
+        <div class="text-right">
+          Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit)
+          > totalCount)? totalCount : current_page * current_limit}} of {{totalCount}}
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getAllUsers()">
+              <i class="fa fa-angle-left"></i>
+            </button>
+            <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getAllUsers()">
+              <i class="fa fa-angle-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Start: add new user Modal -->
+<div id="add-user" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content modal-bg">
+      <div class="modal-header">
+        <h5 class="modal-title">Add a New User</h5>
+        <button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close">
+          <i class="fa fa-close"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="sahil-material">
+          <div class="my-alert  custom-alert" *ngIf="error" id="success-addCompany">{{errorMessage}}</div>
+          <form id="addUserForm" [formGroup]="addUserForm">
+            <div class="form-group label-floating">
+              <label class="control-label" for="username">Name</label>
+              <input class="form-control" id="username" type="text" name="username" formControlName="username">
+            </div>
+            <div *ngIf="addUserForm.controls.username.touched && !addUserForm.controls.username.valid" class="my-alert ">
+              <p *ngIf="addUserForm.controls.username.errors.required">
+                <span class="mat-icon">
+                  <i class="fa fa-warning"></i>
+                </span> Name is required.
+              </p>
+              <p *ngIf="addUserForm.controls.username.errors.minlength">
+                <span class="mat-icon">
+                  <i class="fa fa-warning"></i>
+                </span> Min 3 character is required.
+              </p>
+            </div>
+            <div class="form-group label-floating">
+              <label class="control-label" for="useremail">Email</label>
+              <input class="form-control" id="useremail" type="text" name="useremail" formControlName="useremail">
+            </div>
+            <div *ngIf="addUserForm.controls.useremail.touched && !addUserForm.controls.useremail.valid" class="my-alert ">
+              <p *ngIf="addUserForm.controls.useremail.errors.required">
+                <span class="mat-icon">
+                  <i class="fa fa-warning"></i>
+                </span> Company email is required.
+              </p>
+              <p *ngIf="addUserForm.controls.useremail.errors.checkmail">
+                <span class="mat-icon">
+                  <i class="fa fa-warning"></i>
+                </span> Invalid Email.
+              </p>
+            </div>
+            <div class="form-group label-floating">
+              <label class="control-label" for="userPassword">Password</label>
+              <input class="form-control" id="userPassword" type="password" name="userPassword" formControlName="userPassword">
+            </div>
+            <div *ngIf="addUserForm.controls.userPassword.touched && !addUserForm.controls.userPassword.valid" class="my-alert ">
+              <p *ngIf="addUserForm.controls.userPassword.errors.required">
+                <span class="mat-icon">
+                  <i class="fa fa-warning"></i>
+                </span> Password is required.
+              </p>
+              <p *ngIf="addUserForm.controls.userPassword.errors.minlength">
+                <span class="mat-icon">
+                  <i class="fa fa-warning"></i>
+                </span> Min 8 character is required.
+              </p>
+            </div>
+            <div class="form-group label-floating">
+              <label class="control-label" for="companyName">Company Name</label>
+              <input class="form-control" id="companyName" type="text" name="companyName" formControlName="companyName">
+            </div>
+            <div *ngIf="addUserForm.controls.companyName.touched && !addUserForm.controls.companyName.valid" class="my-alert ">
+              <p *ngIf="addUserForm.controls.companyName.errors.required">
+                <span class="mat-icon">
+                  <i class="fa fa-warning"></i>
+                </span> Company Name is required.
+              </p>
+              <p *ngIf="addUserForm.controls.companyName.errors.minlength">
+                <span class="mat-icon">
+                  <i class="fa fa-warning"></i>
+                </span> Min 3 character is required.
+              </p>
+            </div>
+            <div class="form-group label-floating">
+              <label class="control-label" for="companySubDomain">Sub Domain</label>
+              <input class="form-control" id="companySubDomain" type="text" name="companySubDomain" formControlName="companySubDomain">
+              <label class="in-active">{{extension}}</label>
+            </div>
+            <div *ngIf="addUserForm.controls.companySubDomain.touched && !addUserForm.controls.companySubDomain.valid" class="my-alert ">
+              <p *ngIf="addUserForm.controls.companySubDomain.errors.required">
+                <span class="mat-icon">
+                  <i class="fa fa-warning"></i>
+                </span> Sub domain is required.
+              </p>
+              <p *ngIf="addUserForm.controls.companySubDomain.errors.minlength">
+                <span class="mat-icon">
+                  <i class="fa fa-warning"></i>
+                </span> Min 4 character is required.
+              </p>
+            </div>
+            <div class="form-group label-floating">
+              <label class="control-label" for="chargebeeId">Chargebee Customer Id</label>
+              <input class="form-control" id="chargebeeId" type="text" name="chargebeeId" formControlName="chargebeeId">
+            </div>
+            <div class="form-group label-floating">
+              <label class="control-label" for="chargebeeSubsId">Chargebee Subscription Id</label>
+              <input class="form-control" id="chargebeeSubsId" type="text" name="chargebeeSubsId" formControlName="chargebeeSubsId">
+            </div>
+            <div class="form-group label-floating">
+              <label class="control-label" for="plan">Plan Id</label>
+              <input class="form-control" id="plan" type="text" name="plan" formControlName="plan">
+            </div>
+            <button type="" (click)="addUser()" class="btn btn btn-red-outline btn-add-user btn-hover" id="adminAddUser" [disabled]="!addUserForm.valid">Add</button>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End:Upgrde Plan Modal -->

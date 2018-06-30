@@ -282,6 +282,7 @@ export class CompaniesComponent extends Datatable implements OnInit, OnDestroy {
 
   getCompanies(query = null) {
     this.loadingCompanies = true;
+    console.log(this.current_page)
     const data = {
       limit: this.current_limit,
       page: this.current_page - 1,
@@ -289,14 +290,14 @@ export class CompaniesComponent extends Datatable implements OnInit, OnDestroy {
     };
     if (query) {
       const que = query.map(q => ({
-          selected_field: q.selected_field,
-          selected_operator: q.selected_operator,
-          stringValue: q.stringValue,
-          numberValue: q.numberValue,
-          multiSelectSelected: q.multiSelectSelected,
-          fixedvalue: q.fixedvalue
-        }));
-        data.query = que;
+        selected_field: q.selected_field,
+        selected_operator: q.selected_operator,
+        stringValue: q.stringValue,
+        numberValue: q.numberValue,
+        multiSelectSelected: q.multiSelectSelected,
+        fixedvalue: q.fixedvalue
+      }));
+      data.query = que;
     }
     this.companies = [];
     return this.adminService.getCompanies(data).subscribe((success: any) => {

@@ -1,0 +1,132 @@
+<div class="page-header">
+  <div class="container-fluid">
+    <h2 class="h5 no-margin-bottom">Leads</h2>
+  </div>
+</div>
+<section class="no-padding-bottom">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-6 text-left" *ngIf="totalCount">
+        <button class="btn" (click)="showFilters()">
+          <i class="fa fa-filter"></i>{{showFilter ? 'Hide Filter' : 'Show Filter' }}
+        </button>
+      </div>
+      <!-- Place for filters -->
+      <div class="col-lg-12 block mt-1" *ngIf="showFilter">
+        <div class="row mb-1" *ngFor="let condition of conditions; let i = index">
+          <div class="col-lg-1">
+            <button class="btn btn-danger btn-xs" (click)="removeCondition(i)" [disabled]="conditions.length == 1">
+              <i class="fa fa-minus"></i>
+            </button>
+          </div>
+          <div class="col-lg-3">
+            <select class="form-control" [(ngModel)]="condition.selected_field" (change)="condition.stringValue = ''; condition.multiSelectSelected = []; initDatePcker(i)">
+              <optgroup label="Leads">
+                <option *ngFor="let compField of condition.fields.leads" value="{{compField.value}}">{{compField.name}}</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="col-lg-3">
+            <select class="form-control" [(ngModel)]="condition.selected_operator" (change)="initDatePcker(i)">
+              <option *ngFor="let operator of condition.operators[condition.selected_field]; let i = index" value="{{operator}}">{{operator}}</option>
+            </select>
+          </div>
+          <div class="col-lg-3">
+            <input type="text" *ngIf="[ 'email'].includes(condition.selected_field)" class="form-control" [(ngModel)]="condition.stringValue"
+            />
+            <input type="text" *ngIf="[ 'createdAt'].includes(condition.selected_field)" class="form-control {{'dpkr_' + i}}" [(ngModel)]="condition.numberValue.value1"
+            />
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col-lg-1">
+            <button class="btn btn-default btn-xs" (click)="addCondition()">
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+          <div class="col-lg-11">
+            <button class="btn btn-success" (click)="applyFilter()">
+              Apply Filter
+            </button>
+          </div>
+        </div>
+
+      </div>
+      <!-- End of filters -->
+      <div class="col-lg-12" *ngIf="totalCount">
+        <div class="text-right">
+          Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit)
+          > totalCount)? totalCount : current_page * current_limit}} of {{totalCount}}
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getAllLeads()">
+              <i class="fa fa-angle-left"></i>
+            </button>
+            <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getAllLeads()">
+              <i class="fa fa-angle-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="block row">
+          <div class="table-responsive">
+            <table class="table table-striped table-hover">
+              <thead *ngIf="totalCount">
+                <tr>
+                  <th>
+                    Emails
+                  </th>
+                  <th>
+                    Created At
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngIf="!loadingLeads">
+                  <tr *ngFor="let lead of allLeads">
+                    <td>
+                      {{lead.email}}
+                    </td>
+                    <td>
+                      {{lead.createdAt.split('T')[0]}}
+                    </td>
+                  </tr>
+                </ng-container>
+                <ng-container *ngIf="!loadingLeads && totalCount == 0">
+                  <tr>
+                    <th colspan="6" scope="row" class="text-center">
+                      No record found
+                    </th>
+                  </tr>
+                </ng-container>
+                <ng-container *ngIf="loadingLeads">
+                  <tr>
+                    <th colspan="6" scope="row" class="text-center">
+                      <i class="fa fa-spinner fa-5x fa-spin"></i>
+                    </th>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12" *ngIf="totalCount">
+        <div class="text-right">
+          Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit)
+          > totalCount)? totalCount : current_page * current_limit}} of {{totalCount}}
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getAllLeads()">
+              <i class="fa fa-angle-left"></i>
+            </button>
+            <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getAllLeads()">
+              <i class="fa fa-angle-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

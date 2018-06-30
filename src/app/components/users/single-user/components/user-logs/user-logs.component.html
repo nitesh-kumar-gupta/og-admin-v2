@@ -1,0 +1,134 @@
+<section class="padding-top">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12 toppad">
+        <div class="panel">
+          <div class="panel-heading">
+            <h5 class="panel-title">
+              Inbox
+            </h5>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class=" col-md-12 col-lg-12 ">
+                <table class="table table-user-information">
+                  <thead>
+                    <tr>
+                      <th>Sender</th>
+                      <th>Receiver</th>
+                      <th>Subject</th>
+                      <th>Template Id</th>
+                      <th>Status</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let log of inbox">
+                      <td>
+                        {{log.sender}}
+                      </td>
+                      <td>
+                        {{log.receiver}}
+                      </td>
+                      <td>
+                        {{log.subject}}
+                      </td>
+                      <td>
+                        {{log.templateId}}
+                      </td>
+                      <td>
+                        {{log.status}}
+                      </td>
+                      <td>
+                        {{log.createdAt}}
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tbody>
+                    <tr *ngIf="noInbox">
+                      <td></td>
+                      <td></td>
+                      <td colspan="5" class="no-invoice">
+                        No Inbox messages are found
+                      </td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="panel-footer">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12 toppad">
+        <div class="panel">
+          <div class="panel-heading">
+            <h5 class="panel-title">
+              Outbox
+            </h5>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class=" col-md-12 col-lg-12 ">
+                <table class="table table-user-information">
+                  <thead>
+                    <tr>
+                      <th>Sender</th>
+                      <th>Receiver</th>
+                      <th>Subject</th>
+                      <th>Template Id</th>
+                      <th>Status</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let log of outbox">
+                      <td>
+                        {{log.sender}}
+                      </td>
+                      <td>
+                        {{log.receiver}}
+                      </td>
+                      <td>
+                        {{log.subject}}
+                      </td>
+                      <td>
+                        {{log.templateId}}
+                      </td>
+                      <td>
+                        {{log.status}}
+                      </td>
+                      <td>
+                        {{log.createdAt}}
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tbody>
+                    <tr *ngIf="noOutbox">
+                      <td></td>
+                      <td></td>
+                      <td colspan="5" class="no-invoice">
+                        No Outbox messages are found
+                      </td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="panel-footer">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

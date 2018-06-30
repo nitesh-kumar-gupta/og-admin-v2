@@ -34,22 +34,22 @@
             </select>
           </div>
           <div class="col-lg-3">
-            <input type="text" *ngIf="['name', 'sub_domain', 'cname.url', 'billing.chargebee_subscription_id', 'billing.chargebee_customer_id'].includes(condition.selected_field)" class="form-control" [(ngModel)]="condition.stringValue"/>
-            <angular2-multiselect
-              *ngIf="['deal_refered', 'current_referral_program', 'parent_company', 'is_admin_created', 'agency', 'remove_leads_after_saving', 'GDPR', 'billing.chargebee_plan_id', 'billing.chargebee_subscription_status', 'billing.customer_card_status', 'previousPlan.plan_id', 'previousPlan.subscription_status'].includes(condition.selected_field) && ['includes', 'does not include'].includes(condition.selected_operator)"
-              [data]="condition.multiselectItems[condition.selected_field]"
-              [(ngModel)]="condition.multiSelectSelected"
-              [settings]="multiSelectSettings">
+            <input type="text" *ngIf="['name', 'sub_domain', 'cname.url', 'billing.chargebee_subscription_id', 'billing.chargebee_customer_id'].includes(condition.selected_field)"
+              class="form-control" [(ngModel)]="condition.stringValue" />
+            <angular2-multiselect *ngIf="['deal_refered', 'current_referral_program', 'parent_company', 'is_admin_created', 'agency', 'remove_leads_after_saving', 'GDPR', 'billing.chargebee_plan_id', 'billing.chargebee_subscription_status', 'billing.customer_card_status', 'previousPlan.plan_id', 'previousPlan.subscription_status'].includes(condition.selected_field) && ['includes', 'does not include'].includes(condition.selected_operator)"
+              [data]="condition.multiselectItems[condition.selected_field]" [(ngModel)]="condition.multiSelectSelected" [settings]="multiSelectSettings">
             </angular2-multiselect>
             <select class="form-control" [(ngModel)]="condition.stringValue" *ngIf="['deal_refered', 'current_referral_program', 'parent_company', 'is_admin_created', 'agency', 'remove_leads_after_saving', 'GDPR', 'billing.chargebee_plan_id', 'billing.chargebee_subscription_status', 'billing.customer_card_status', 'previousPlan.plan_id', 'previousPlan.subscription_status'].includes(condition.selected_field) && !['includes', 'does not include'].includes(condition.selected_operator)">
               <option *ngFor="let item of condition.multiselectItems[condition.selected_field]" value="{{item.id}}">
                 {{item.itemName}}
               </option>
             </select>
-            <input type="text" *ngIf="['current_limit.users', 'current_limit.companies', 'current_limit.calculators', 'createdAt', 'subscription_updated'].includes(condition.selected_field)" class="form-control {{'dpkr_' + i}}" [(ngModel)]="condition.numberValue.value1"/>
+            <input type="text" *ngIf="['current_limit.users', 'current_limit.companies', 'current_limit.calculators', 'createdAt', 'subscription_updated'].includes(condition.selected_field)"
+              class="form-control {{'dpkr_' + i}}" [(ngModel)]="condition.numberValue.value1" />
           </div>
           <div class="col-md-2">
-            <input type="text" *ngIf="condition.selected_operator == 'between' && ['current_limit.users', 'current_limit.companies', 'current_limit.calculators'].includes(condition.selected_field)" class="form-control" [(ngModel)]="condition.numberValue.value2"/>
+            <input type="text" *ngIf="condition.selected_operator == 'between' && ['current_limit.users', 'current_limit.companies', 'current_limit.calculators'].includes(condition.selected_field)"
+              class="form-control" [(ngModel)]="condition.numberValue.value2" />
           </div>
         </div>
 
@@ -69,15 +69,16 @@
       </div>
       <div class="col-lg-12">
         <div class="text-right">
-            Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit) > totalCompanies)? totalCompanies : current_page * current_limit}} of {{totalCompanies}}
-            <div class="btn-group">
-              <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getCompanies()">
-                <i class="fa fa-angle-left"></i>
-              </button>
-              <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getCompanies()">
-                <i class="fa fa-angle-right"></i>
-              </button>
-            </div>
+          Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit)
+          > totalCompanies)? totalCompanies : current_page * current_limit}} of {{totalCompanies}}
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getCompanies()">
+              <i class="fa fa-angle-left"></i>
+            </button>
+            <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getCompanies()">
+              <i class="fa fa-angle-right"></i>
+            </button>
+          </div>
         </div>
       </div>
       <div class="col-lg-12">
@@ -119,7 +120,9 @@
                 </ng-container>
                 <ng-container *ngIf="loadingCompanies">
                   <tr>
-                    <th colspan="6" scope="row" class="text-center"><i class="fa fa-spinner fa-5x fa-spin"></i></th>
+                    <th colspan="6" scope="row" class="text-center">
+                      <i class="fa fa-spinner fa-5x fa-spin"></i>
+                    </th>
                   </tr>
                 </ng-container>
               </tbody>
@@ -129,15 +132,16 @@
       </div>
       <div class="col-lg-12">
         <div class="text-right">
-          Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit) > totalCompanies)? totalCompanies : current_page * current_limit}} of {{totalCompanies}}
-            <div class="btn-group">
-              <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getCompanies()">
-                <i class="fa fa-angle-left"></i>
-              </button>
-              <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getCompanies()">
-                <i class="fa fa-angle-right"></i>
-              </button>
-            </div>
+          Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit)
+          > totalCompanies)? totalCompanies : current_page * current_limit}} of {{totalCompanies}}
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getCompanies()">
+              <i class="fa fa-angle-left"></i>
+            </button>
+            <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getCompanies()">
+              <i class="fa fa-angle-right"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>

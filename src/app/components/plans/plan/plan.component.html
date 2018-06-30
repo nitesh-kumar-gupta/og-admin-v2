@@ -1,0 +1,145 @@
+<section class="padding-top">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12 toppad text-center">
+        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#planModal">
+          Create Plan
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 toppad ">
+        <div class="panel" *ngIf="plansInfo && plansInfo['isPlanSelected']">
+          <div class="panel-heading">
+            <h5 class="panel-title">Plan at glance
+            </h5>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class=" col-md-12 col-lg-12 ">
+                <table class="table table-user-information">
+                  <tbody>
+                    <tr *ngFor="let key of ['users','calculators','visits','templates','leads']">
+                      <td>{{key}}:</td>
+                      <td>
+                        <input type="text" [disabled]="planDetails[key]===-1 && checkedVal.checked" (keyup)="planDetails[key]=d.value" [value]="planDetails[key]===-1 ? 'Unlimited' : planDetails[key]"
+                          #d>
+                      </td>
+                      <td>
+                        <label>
+                          <input type="checkbox" [checked]="planDetails[key]===-1" (change)="planDetails[key]=(planDetails[key]>=0)?-1:data[key]" #checkedVal>Unlimited
+                        </label>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="panel-footer text-right">
+            <button id="btn-saveUser" class="btn btn-primary mb-1 btn-block" (click)="updatePlan(planDetails)">Update</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="planModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Create/Duplicate a Plan</h4>
+        <button type="button" class="close btn-close" data-dismiss="modal" (click)="resetForm()" aria-label="Close">
+          <i class="fa fa-close" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger" *ngIf="errorMessage!=='no_error' || !errorMessage">{{errorMessage}}</div>
+        <form [formGroup]="planData">
+          <div class="form-group">
+            <label for="plan_id">Id:</label>
+            <input type="text" class="form-control" id="plan_id" formControlName="_id">
+            <div *ngIf="planData.get('_id').invalid">
+              <p *ngIf="planData.get('_id').errors.invalidIdFormat">Plan Id should contain either one of these[_y,_d,_m]</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="plan_name">Name:</label>
+            <input type="text" class="form-control" id="plan_name" formControlName="name">
+          </div>
+          <div class="form-group">
+            <label for="invoice_name">Invoice Name:</label>
+            <input type="text" class="form-control" id="invoice_name" formControlName="invoice_name">
+          </div>
+          <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea class="form-control" id="description" formControlName="description"></textarea>
+          </div>
+
+          <div *ngIf="plansInfo['planTypes']" class="form-group">
+            <!-- {{plansInfo['planTypes']}} -->
+            <label for="plan_type">Plan Type</label>
+            <ng-select #selects placeholder="Select Plan Type" [items]="getTypes()" (selected)="onPlanTypeSelected($event)" id="plan_type"></ng-select>
+          </div>
+          <div class="form-group">
+            <label for="price">Price(USD):</label>
+            <input type="number" class="form-control" formControlName="price" id="price">
+          </div>
+          <div class="form-group">
+            <label for="period">Bill Every:</label>
+            <div class="row">
+              <div class="col-md-6">
+                <input type="number" class="form-control" formControlName="period" id="period">
+              </div>
+              <div class="col-md-6">
+                <ng-select #selects [allowClear]="true" (removed)="planData.get('period_unit').setValue('');" placeholder="Select period"
+                  [items]="cycles" (selected)="planData.get('period_unit').setValue($event.id);" id="period_unit"></ng-select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="plan_to_be_duplicated">Plan to be duplicated - Select nothing to create a plan from scratch with all features set to false</label>
+            <ng-select #selects [allowClear]="true" (removed)="onPlanDeselect($event)" placeholder="Select a plan to be duplicated" [items]="getPlanNames()"
+              (selected)="onPlanSelected($event)" id="plan_to_be_duplicated"></ng-select>
+          </div>
+          <div *ngIf="!planData.get('source_plan').value">
+            <div class="form-group">
+              <label for="companies">Number of companies - Write -1 for infinite</label>
+              <input type="number" class="form-control" formControlName="companies" id="companies">
+            </div>
+            <div class="form-group">
+              <label for="leads">Number of leads per month - Write -1 for infinite</label>
+              <input type="number" class="form-control" formControlName="leads" id="leads">
+            </div>
+            <div class="form-group">
+              <label for="visits">Number of visits per month - Write -1 for infinite</label>
+              <input type="number" class="form-control" formControlName="visits" id="visits">
+            </div>
+            <div class="form-group">
+              <label for="templates">Number of templates - Write -1 for infinite</label>
+              <input type="number" class="form-control" formControlName="templates" id="templates">
+            </div>
+            <div class="form-group">
+              <label for="calculators">Number of calculators - Write -1 for infinite</label>
+              <input type="number" class="form-control" formControlName="calculators" id="calculators">
+            </div>
+            <div class="form-group">
+              <label for="users">Number of users - Write -1 for infinite</label>
+              <input type="number" class="form-control" formControlName="users" id="users">
+            </div>
+
+          </div>
+
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" [disabled]="!planData.valid" #createButton (click)="createPlan(planData.value,createButton,dismiss)">Create</button>
+        <button type="button" #dismiss class="btn btn-default" (click)="resetForm()" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
