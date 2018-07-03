@@ -85,7 +85,7 @@
             <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getCompanySuccessData()">
               <i class="fa fa-angle-left"></i>
             </button>
-            <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getCompanySuccessData()">
+            <button type="button" class="btn btn-primary" [disabled]="current_page === total_pages" (click)="nextPage();getCompanySuccessData()">
               <i class="fa fa-angle-right"></i>
             </button>
           </div>
@@ -221,7 +221,7 @@
             <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getCompanySuccessData()">
               <i class="fa fa-angle-left"></i>
             </button>
-            <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getCompanySuccessData()">
+            <button type="button" class="btn btn-primary" [disabled]="current_page === total_pages" (click)="nextPage();getCompanySuccessData()">
               <i class="fa fa-angle-right"></i>
             </button>
           </div>

@@ -62,7 +62,7 @@
             <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getAllLeads()">
               <i class="fa fa-angle-left"></i>
             </button>
-            <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getAllLeads()">
+            <button type="button" class="btn btn-primary" [disabled]="current_page === total_pages" (click)="nextPage();getAllLeads()">
               <i class="fa fa-angle-right"></i>
             </button>
           </div>
@@ -120,7 +120,7 @@
             <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getAllLeads()">
               <i class="fa fa-angle-left"></i>
             </button>
-            <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getAllLeads()">
+            <button type="button" class="btn btn-primary" [disabled]="current_page === total_pages" (click)="nextPage();getAllLeads()">
               <i class="fa fa-angle-right"></i>
             </button>
           </div>

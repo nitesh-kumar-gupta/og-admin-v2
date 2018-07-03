@@ -218,18 +218,18 @@
             </table>
           </div>
         </div>
-      </div>
-      <div class="col-lg-12">
-        <div class="text-right">
-          Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit) > totalApps)? totalApps: current_page * current_limit}} of {{totalApps}}
-            <div class="btn-group">
-              <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();searchApps()">
-                <i class="fa fa-angle-left"></i>
-              </button>
-              <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();searchApps()">
-                <i class="fa fa-angle-right"></i>
-              </button>
-            </div>
+        <div class="col-lg-12">
+          <div class="text-right">
+            Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit) > totalApps)? totalApps: current_page * current_limit}} of {{totalApps}}
+              <div class="btn-group">
+                <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();searchApps()">
+                  <i class="fa fa-angle-left"></i>
+                </button>
+                <button type="button" class="btn btn-primary" [disabled]="current_page === total_pages" (click)="nextPage();searchApps()">
+                  <i class="fa fa-angle-right"></i>
+                </button>
+              </div>
+          </div>
         </div>
       </div>
     </div>

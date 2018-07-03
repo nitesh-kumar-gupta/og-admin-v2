@@ -23,7 +23,7 @@ export class UserService extends BaseService {
   ) {
     super();
   }
-
+  
   getUser(id:number) {
     let getUserUrl = this._url + '/users/'+id;
     return this._http.get(getUserUrl).pipe(

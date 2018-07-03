@@ -12,63 +12,63 @@ declare var jQuery: any;
   templateUrl: './coupons.component.html',
   styleUrls: ['./coupons.component.css']
 })
-export class CouponsComponent extends Datatable implements OnInit,AfterViewInit {
+export class CouponsComponent extends Datatable implements OnInit, AfterViewInit {
 
   error: boolean;
   loading: boolean = false;
-  loadingModal:boolean = false;
-  edit_coupon:boolean = false;
+  loadingModal: boolean = false;
+  edit_coupon: boolean = false;
   status: string = 'active';
   couponcodes: Object = [];
-  createCouponsForm:FormGroup;
-  editCouponsForm:FormGroup;
-  limitedPeriod:boolean = false;
+  createCouponsForm: FormGroup;
+  editCouponsForm: FormGroup;
+  limitedPeriod: boolean = false;
   errorCreate: boolean = false;
   errorView: boolean = false;
   errorDel: boolean = false;
-  Message:string = '';
-  planList:any = [];
+  Message: string = '';
+  planList: any = [];
   viewCouponCB: any = [];
   viewCouponDB: any = [];
-  edt_extra_calc:string = '';
-  edt_apply_for:string = '';
-  delCoupon:any =  '';
-  totalCount:number;
+  edt_extra_calc: string = '';
+  edt_apply_for: string = '';
+  delCoupon: any = '';
+  totalCount: number;
 
-  constructor( public _adminService : AdminService,public _script:ScriptService,public fb:FormBuilder,
-  public _membershipService : MembershipService) {
+  constructor(public _adminService: AdminService, public _script: ScriptService, public fb: FormBuilder,
+    public _membershipService: MembershipService) {
     super();
-    this.totalCount=0;
+    this.totalCount = 0;
     this.createCouponsForm = this.fb.group({
-      couponName : ['', Validators.compose([Validators.required,Validators.minLength(2)])],
-      couponCode : ['', Validators.compose([Validators.required,Validators.minLength(2),Validators.pattern('^[0-9a-zA-Z_%-]*$')])],
+      couponName: ['', Validators.compose([Validators.required, Validators.minLength(2)])],
+      couponCode: ['', Validators.compose([Validators.required, Validators.minLength(2), Validators.pattern('^[0-9a-zA-Z_%-]*$')])],
       discountType: ['fixed_amount', Validators.compose([Validators.required])],
-      discountValue: ['0', Validators.compose([Validators.required,Validators.minLength(1),Validators.pattern('^[0-9]+(\.[0-9]{0,2})?$')])],
+      discountValue: ['0', Validators.compose([Validators.required, Validators.minLength(1), Validators.pattern('^[0-9]+(\.[0-9]{0,2})?$')])],
       durationType: ['one_time', Validators.compose([Validators.required])],
-      durationValue: ['1', Validators.compose([Validators.required,Validators.minLength(1),Validators.pattern('^[0-9]*$')])],
+      durationValue: ['1', Validators.compose([Validators.required, Validators.minLength(1), Validators.pattern('^[0-9]*$')])],
       maxRedem: ['', Validators.compose([Validators.pattern('^[0-9]*$')])],
-      extra_calc:['1', Validators.compose([Validators.required,Validators.pattern('^[1-9][0-9]*$')])],
-      applyFor:['', Validators.compose([Validators.required])],
+      extra_calc: ['1', Validators.compose([Validators.required, Validators.pattern('^[1-9][0-9]*$')])],
+      applyFor: ['', Validators.compose([Validators.required])],
     });
     this.editCouponsForm = this.fb.group({
-      edit_extra_calc:['0', Validators.compose([Validators.required,Validators.pattern('^[0-9]*$')])],
-      edit_applyFor:['', Validators.compose([Validators.required])],
+      edit_extra_calc: ['0', Validators.compose([Validators.required, Validators.pattern('^[0-9]*$')])],
+      edit_applyFor: ['', Validators.compose([Validators.required])],
     });
-   }
+  }
 
   ngOnInit() {
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     this._script.load('datatables')
-    .then((data) => {
-      this.status = 'active';
-      this.getCouponsCode();
-    })
-    .catch((error) => {
-      console.log('Script not loaded', error);
-    });
-  this.getPlanList();
+      .then((data) => {
+        this.status = 'active';
+        this.getCouponsCode();
+      })
+      .catch((error) => {
+        console.log('Script not loaded', error);
+      });
+    this.getPlanList();
 
   }
 
@@ -76,11 +76,11 @@ export class CouponsComponent extends Datatable implements OnInit,AfterViewInit 
     this._membershipService.getPlanList()
       .subscribe((result) => {
         this.planList = [];
-        result.list.forEach((plan:any)=>{
-          if(plan.plan.id.split('_').length === 2 && (plan.plan.id.split('_')[1] === 'm' || plan.plan.id.split('_')[1] === 's' || plan.plan.id.split('_')[1] === 'y'))
+        result.list.forEach((plan: any) => {
+          if (plan.plan.id.split('_').length === 2 && (plan.plan.id.split('_')[1] === 'm' || plan.plan.id.split('_')[1] === 's' || plan.plan.id.split('_')[1] === 'y'))
             this.planList.push(plan);
         });
-      },(error) => {
+      }, (error) => {
         console.log(error, "this is the error in plan lists");
       })
   }
@@ -98,8 +98,9 @@ export class CouponsComponent extends Datatable implements OnInit,AfterViewInit 
       .subscribe(
         (success: any) => {
           self.couponcodes = success.coupons;
-        this.totalCount=success.count;
+          this.totalCount = success.count;
           this.total_pages = Math.ceil(success.count / this.current_limit);
+          console.log(this.total_pages,success.count,this.current_limit)
           self.loading = false;
         },
         (error: any) => {
@@ -109,27 +110,27 @@ export class CouponsComponent extends Datatable implements OnInit,AfterViewInit 
       );
   }
 
-  createPromo(){
+  createPromo() {
     this.errorCreate = false;
     this.Message = '';
-    jQuery('#btnCreateCoupon').html('please wait').attr('disabled',true);
+    jQuery('#btnCreateCoupon').html('please wait').attr('disabled', true);
     let self = this;
     let coupon = {
-      'applyFor' : this.createCouponsForm.value.applyFor,
-      'couponCode' : this.createCouponsForm.value.couponCode,
-      'couponName' : this.createCouponsForm.value.couponName,
-      'discountType' : this.createCouponsForm.value.discountType,
-      'discountValue' : parseFloat(this.createCouponsForm.value.discountValue),
-      'durationType' : this.createCouponsForm.value.durationType,
-      'durationValue' : parseInt(this.createCouponsForm.value.durationValue),
-      'extra_calc' : parseInt(this.createCouponsForm.value.extra_calc),
-      'maxRedem' : parseFloat(this.createCouponsForm.value.maxRedem)
+      'applyFor': this.createCouponsForm.value.applyFor,
+      'couponCode': this.createCouponsForm.value.couponCode,
+      'couponName': this.createCouponsForm.value.couponName,
+      'discountType': this.createCouponsForm.value.discountType,
+      'discountValue': parseFloat(this.createCouponsForm.value.discountValue),
+      'durationType': this.createCouponsForm.value.durationType,
+      'durationValue': parseInt(this.createCouponsForm.value.durationValue),
+      'extra_calc': parseInt(this.createCouponsForm.value.extra_calc),
+      'maxRedem': parseFloat(this.createCouponsForm.value.maxRedem)
     }
     // console.log('this.createCouponsForm.value  component',coupon);
     let createPromo = self._adminService.createPromo(coupon)
       .subscribe(
         (success: any) => {
-          jQuery('#btnCreateCoupon').html('Create').attr('disabled',false);
+          jQuery('#btnCreateCoupon').html('Create').attr('disabled', false);
           jQuery('#createPromocodeModal').modal('hide');
           jQuery('#createPromocodeModal input').val('');
           self.createCouponsForm.value.couponName = '';
@@ -147,39 +148,39 @@ export class CouponsComponent extends Datatable implements OnInit,AfterViewInit 
           console.log('error leads', error);
           this.errorCreate = true;
           this.Message = error.error.err_message;
-          if(error.error.err_message === 'discount_amount : should not be sent for the discount_type [percentage]')
+          if (error.error.err_message === 'discount_amount : should not be sent for the discount_type [percentage]')
             this.Message = 'For discount type percentage mimimum discount value must be 0.01';
           createPromo.unsubscribe();
-          jQuery('#btnCreateCoupon').html('Create').attr('disabled',false);
+          jQuery('#btnCreateCoupon').html('Create').attr('disabled', false);
         }
       );
   }
-  deletePromocodeConfirm(couponCode:any){
+  deletePromocodeConfirm(couponCode: any) {
     this.delCoupon = couponCode;
     jQuery('#delConfirmdeModal').modal('show');
   }
-  deletePromocode(couponId:string){
-    jQuery('#btnDelYes').html("Please wait").attr('disabled',true);
+  deletePromocode(couponId: string) {
+    jQuery('#btnDelYes').html("Please wait").attr('disabled', true);
     this.errorDel = false;
     this.Message = '';
     let self = this;
     let deletePromocode = self._adminService.deletePromocode(couponId)
       .subscribe(
         (success: any) => {
-          jQuery('#btnDelYes').html("Yes").attr('disabled',false);
+          jQuery('#btnDelYes').html("Yes").attr('disabled', false);
           jQuery('#delConfirmdeModal').modal('hide');
           this.delCoupon = '';
           self.getCouponsCode();
         },
         (error: any) => {
-          jQuery('#btnDelYes').html("Yes").attr('disabled',false);
+          jQuery('#btnDelYes').html("Yes").attr('disabled', false);
           this.errorDel = true;
           this.Message = error.error.err_message;
           deletePromocode.unsubscribe();
         }
       );
   }
-  viewPromocode(couponId:string){
+  viewPromocode(couponId: string) {
     this.errorView = false;
     this.Message = '';
     let self = this;
@@ -204,50 +205,50 @@ export class CouponsComponent extends Datatable implements OnInit,AfterViewInit 
         }
       );
   }
-  editPromo(){
+  editPromo() {
     this.error = false;
     this.Message = '';
     let self = this;
-    jQuery('#btnSaveCoupon').html('Please wait...').attr('disabled',true);
-    let editPromo = self._adminService.editPromocode(self.viewCouponDB._id,self.editCouponsForm.value)
+    jQuery('#btnSaveCoupon').html('Please wait...').attr('disabled', true);
+    let editPromo = self._adminService.editPromocode(self.viewCouponDB._id, self.editCouponsForm.value)
       .subscribe(
-        (success:any)=>{
+        (success: any) => {
           // console.log('editPromo',success);
           self.edit_coupon = false;
           self.viewCouponDB = success;
-          jQuery('#btnSaveCoupon').html('Update').attr('disabled',false);
+          jQuery('#btnSaveCoupon').html('Update').attr('disabled', false);
           this.error = false;
           this.Message = '';
           self.getCouponsCode();
         },
-        (error:any)=>{
+        (error: any) => {
           console.log('error leads', error);
           self.error = true;
-          self.Message= error.error.err_message;
-          jQuery('#btnSaveCoupon').html('Update').attr('disabled',false);
+          self.Message = error.error.err_message;
+          jQuery('#btnSaveCoupon').html('Update').attr('disabled', false);
           editPromo.unsubscribe();
         }
       );
   }
-  DurationType(type:string){
-    if(type === 'limited_period')
+  DurationType(type: string) {
+    if (type === 'limited_period')
       this.limitedPeriod = true;
     else {
       this.limitedPeriod = false;
       this.createCouponsForm.value.durationValue = '';
     }
   }
-  DiscountType(type:string){
-    if(type === 'fixed_amount') {
+  DiscountType(type: string) {
+    if (type === 'fixed_amount') {
       jQuery('#discountValueSpan').html('USD');
       jQuery('#discountTypeNote').html('The specified amount will be given as discount.');
     }
-    else{
+    else {
       jQuery('#discountValueSpan').html('%');
       jQuery('#discountTypeNote').html('The specified percentage will be given as discount.');
     }
   }
-  NameChange(){
+  NameChange() {
     this.createCouponsForm.value.couponCode = this.createCouponsForm.value.couponName.replace(/[\s]/g, '').toUpperCase();
     //console.log('this.createCouponsForm.value.couponName',nam);
   }
@@ -255,8 +256,8 @@ export class CouponsComponent extends Datatable implements OnInit,AfterViewInit 
     super.searchData();
     this.getCouponsCode();
   }
-  editCouponCode(id:string){
-    console.log('id',id);
+  editCouponCode(id: string) {
+    console.log('id', id);
   }
 
 }

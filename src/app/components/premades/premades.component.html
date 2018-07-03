@@ -85,7 +85,7 @@
             <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getCalculators()">
               <i class="fa fa-angle-left"></i>
             </button>
-            <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getCalculators()">
+            <button type="button" class="btn btn-primary" [disabled]="current_page === total_pages" (click)="nextPage();getCalculators()">
               <i class="fa fa-angle-right"></i>
             </button>
           </div>
@@ -207,7 +207,7 @@
             <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getCalculators()">
               <i class="fa fa-angle-left"></i>
             </button>
-            <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getCalculators()">
+            <button type="button" class="btn btn-primary" [disabled]="current_page === total_pages" (click)="nextPage();getCalculators()">
               <i class="fa fa-angle-right"></i>
             </button>
           </div>

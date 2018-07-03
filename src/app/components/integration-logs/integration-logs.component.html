@@ -44,7 +44,7 @@
           <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getIntegrationLogs()">
             <i class="fa fa-angle-left"></i>
           </button>
-          <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getIntegrationLogs()">
+          <button type="button" class="btn btn-primary" [disabled]="current_page === total_pages" (click)="nextPage();getIntegrationLogs()">
             <i class="fa fa-angle-right"></i>
           </button>
         </div>
@@ -108,7 +108,7 @@
       <button type="button" class="btn btn-primary" [disabled]="current_page === 1" (click)="prevPage();getIntegrationLogs()">
         <i class="fa fa-angle-left"></i>
       </button>
-      <button type="button" class="btn btn-primary" [disabled]="current_page === pages" (click)="nextPage();getIntegrationLogs()">
+      <button type="button" class="btn btn-primary" [disabled]="current_page === total_pages" (click)="nextPage();getIntegrationLogs()">
         <i class="fa fa-angle-right"></i>
       </button>
     </div>

@@ -71,7 +71,7 @@
           <button type="button" class="btn btn-primary" [disabled]="current_page=== 1" (click)="prevPage();getDomains()">
             <i class="fa fa-angle-left"></i>
           </button>
-          <button type="button" class="btn btn-primary" [disabled]="current_page=== pages" (click)="nextPage();getDomains()">
+          <button type="button" class="btn btn-primary" [disabled]="current_page=== total_pages" (click)="nextPage();getDomains()">
             <i class="fa fa-angle-right"></i>
           </button>
         </div>
