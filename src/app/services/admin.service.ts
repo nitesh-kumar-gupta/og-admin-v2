@@ -152,6 +152,7 @@ export class AdminService extends BaseService {
     )
   }
   getApps(data): any {
+    console.log(data)
     return this.http.post(this._url + '/admin/companies/getapps', data, this.options)
       .pipe(
         map(this.extractData),
@@ -483,6 +484,7 @@ export class AdminService extends BaseService {
 
 
   getCompanySuccessRate(data): any {
+    console.log("dcsdfv",data)
     return this.http.post(this._url + '/admin/companies/successrate/', data, this.options)
       .pipe(
         map(this.extractData),

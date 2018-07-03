@@ -46,6 +46,8 @@ export class CacheLogsComponent extends Datatable implements OnInit {
         this.main = this.keyValues;
         this.totalCache = success.count;
         this.pages = Math.ceil(success.count / this.current_limit);
+        
+        console.log(this.pages, success.count, this.current_limit)
         this.loading = false;
       }, (error: any) => {
         // window.toastNotification("Failed to load cache...")
@@ -57,18 +59,18 @@ export class CacheLogsComponent extends Datatable implements OnInit {
   KeyValueDisplay(id, keyName) {
     let self = this;
     self.KeyName = keyName
-    console.log("id is:", id, "keyName:", keyName, "value is: ",self.keyValues[id].value)
+    console.log("id is:", id, "keyName:", keyName, "value is: ", self.keyValues[id].value)
     document.getElementById("json").innerHTML =
-    JSON.stringify(self.keyValues[id].value, null, 2)
-}
+      JSON.stringify(self.keyValues[id].value, null, 2)
+  }
 
   searchData() {
-  if (this.searchText !== '' || this.searchText !== undefined) {
-  this.searchText = this.searchText.trim();
-  this.keyValues = this.main.filter((ele) => {
-  return ((ele.key.toLowerCase().indexOf(this.searchText.toLowerCase()) > -1))
-  });
-  }
+    if (this.searchText !== '' || this.searchText !== undefined) {
+      this.searchText = this.searchText.trim();
+      this.keyValues = this.main.filter((ele) => {
+        return ((ele.key.toLowerCase().indexOf(this.searchText.toLowerCase()) > -1))
+      });
+    }
   }
   deleteCache(index, keyName) {
     let self = this;

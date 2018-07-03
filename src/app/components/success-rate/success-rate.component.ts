@@ -8,7 +8,7 @@ import { MembershipService } from '../../services/membership.service';
 import { CookiesService } from '../../services/cookies.service';
 import { FilterOperators } from '../../interfaces/filter-operators.interface';
 import { Subscription } from 'rxjs';
-import { debounceTime, switchMap ,distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, switchMap, distinctUntilChanged } from 'rxjs/operators';
 
 
 
@@ -25,12 +25,15 @@ declare var jQuery: any;
 export class SuccessRateComponent extends Datatable implements OnInit {
 
   totalCount: number;
+  conditions: Array<any> = [];
+  condition: Object;
   momentJs: any;
   loading = false;
   paymentLoading = false;
   showAdvancedFilter = false;
   scriptLoaded = false;
-  showFilter: boolean=false;
+  showFilter: boolean = false;
+  operators: {};
 
   company: Array<any> = [];
   input = new FormControl();
@@ -42,149 +45,18 @@ export class SuccessRateComponent extends Datatable implements OnInit {
   sortKey = '_id'; // default sort parameters
   sortOrder = -1; // -1 for ascending order
 
-  currentSelectedFilter: any = "";
+  // currentSelectedFilter: any = "";
   filters: Array<any> = []; // represents each filter
   savedFilters: Array<any> = [];
   filtersPostData: Array<any> = [];
-
-  filter = {
-    company: [
-      {
-        value :'name',
-        name:'name'
-      },
-      {
-        value :'number_of_calculators',
-        name:'number_of_calculators'
-      },
-      {
-        value :'leads',
-        name:'leads'
-      },
-      {
-        value :'last_lead_generated',
-        name:'last_lead_generated'
-      },
-      {
-        value :'visits',
-        name:'visits'
-      },
-      {
-        value :'sign_up',
-        name:'sign_up'
-      },
-      {
-        value :'plan',
-        name:'plan'
-      },
-      {
-        value : 'appsumo_created',
-        name: 'appsumo_created'
-      },
-      {
-        value :'conversion_rate',
-        name:'conversion_rate'
-      },
-      {
-        value :'trial',
-        name:'trial'
-      },
-      {
-        value :'next_payment',
-        name:'next_payment'
-      },
-      {
-        value :'percent_cycle_over',
-        name:'percent_cycle_over'
-      },
-      {
-        value :'request_cancellation',
-        name:'request_cancellation'
-      },
-      {
-        value : 'billing_unit',
-        name: 'billing_unit'
-      }
-   ],
-    app: [
-      {
-        value : 'name',
-        name: 'name'
-      },
-      {
-        value : 'status',
-        name: 'status'
-      },
-      {
-        value : 'created_at',
-        name: 'created_at'
-      },
-      {
-        value : 'latest_publish',
-        name: 'latest_publish'
-      },
-      
-   ],
-    user: [
-      {
-        value : 'web_session',
-        name: 'web_session'
-      }
-    ],
-
-    types: {
-      name: 'string',
-      number_of_calculators: 'number',
-      leads: 'number',
-      visits: 'number',
-      last_lead_generated: 'date',
-      sign_up: 'date',
-      plan: 'string',
-      appsumo_created: 'bool',
-      conversion_rate: 'number',
-      trial: 'string',
-      next_payment: 'date',
-      percent_cycle_over: 'number',
-      request_cancellation: 'bool',
-      status: 'string',
-      created_at: 'date',
-      latest_publish: 'date',
-      billing_unit: 'string',
-      web_session: 'number'
-    },
-
-    operators: {
-      leads: FilterOperators.numberOperators,
-      visits: FilterOperators.numberOperators,
-      name: FilterOperators.stringOperators,
-      number_of_calculators: FilterOperators.numberOperators,
-      sign_up: FilterOperators.numberOperators,
-      appsumo_created: ['equals', 'not equal to'],
-      plan: FilterOperators.stringOperators,
-      status: FilterOperators.stringOperators,
-      created_at: FilterOperators.numberOperators,
-      latest_publish: FilterOperators.numberOperators,
-      conversion_rate: FilterOperators.numberOperators,
-      trial: FilterOperators.stringOperators,
-      next_payment: FilterOperators.numberOperators,
-      percent_cycle_over: FilterOperators.numberOperators,
-      request_cancellation: ['equals', 'not equal to'],
-      last_lead_generated: FilterOperators.numberOperators,
-      billing_unit: FilterOperators.stringOperators,
-      web_session: FilterOperators.numberOperators
-    },
-    selected_property: '', // initially select name
-    selected_operator: '',
-    select_property_type: '',
-    visible: true
-  }; // model for a single filter
+  filterFields: any;
 
   public subscriptions: Subscription = new Subscription();
 
   public sub_role: String = null;
 
-  constructor(public _script:ScriptService,public adminService: AdminService,
-  public _membershipService:MembershipService) {
+  constructor(public _script: ScriptService, public adminService: AdminService,
+    public _membershipService: MembershipService) {
     super();
 
     this.momentJs = moment;
@@ -192,15 +64,133 @@ export class SuccessRateComponent extends Datatable implements OnInit {
       let storage = JSON.parse(CookiesService.readCookie('storage'));
       this.sub_role = storage.user.sub_role;
     }
-   }
+
+    this.filterFields = {
+      company: [
+        {
+          value: 'name',
+
+          name: 'name'
+        },
+        {
+          value: 'current_usage.calc',
+          name: 'number_of_calculators'
+        },
+        {
+          value: 'current_usage.total_leads',
+          name: 'leads'
+        },
+        {
+          value: 'last_lead.last_added',
+          name: 'last_lead_generated'
+        },
+        {
+          value: 'current_usage.total_traffic',
+          name: 'visits'
+        },
+        {
+          value: 'billing.chargebee_plan_id',
+          name: 'plan'
+        },
+        {
+          value: 'is_appsumo_created',
+          name: 'appsumo_created'
+        },
+        {
+          value: 'current_usage.total_conversion_rate',
+          name: 'conversion_rate'
+        },
+        {
+          value: 'billing.chargebee_subscription_status',
+          name: 'trial'
+        },
+        {
+          value: 'billing.subscription.end',
+          name: 'next_payment'
+        },
+        {
+          value: 'billing.subscription.percent_cycle_over',
+          name: 'percent_cycle_over'
+        },
+        {
+          value: 'cancellation.cancelled_by_user',
+          name: 'request_cancellation'
+        },
+        {
+          value: 'billing.subscription.billing_unit',
+          name: 'billing_unit'
+        }
+      ],
+      app: [
+        {
+          value: 'name',
+          name: 'name'
+        },
+        {
+          value: 'status',
+          name: 'status'
+        },
+        {
+          value: 'createdAt',
+          name: 'created_at'
+        },
+        {
+          value: 'updatedAt',
+          name: 'latest_publish'
+        },
+
+      ],
+      user: [
+        {
+          value: 'session_count',
+          name: 'web_session'
+        }
+      ]
+    }
+
+    this.operators = {
+      'current_usage.total_leads': this.numberOperators,
+      'current_usage.total_traffic': this.numberOperators,
+      name: this.stringOperators,
+      'current_usage.calc': this.numberOperators,
+      createdAt: this.numberOperators,
+      is_appsumo_created:this.booleanValues,
+      'billing.chargebee_plan_id': this.stringOperators,
+      status: this.stringOperators,
+      'updatedAt': this.numberOperators,
+      'current_usage.total_conversion_rate': this.numberOperators,
+      'billing.chargebee_subscription_status': this.stringOperators,
+      'billing.subscription.end': this.numberOperators,
+      'billing.subscription.percent_cycle_over': this.numberOperators,
+      'cancellation.cancelled_by_user': this.booleanValues,
+      ' last_lead.last_added': this.numberOperators,
+      'billing.subscription.billing_unit': this.stringOperators,
+      session_count: this.numberOperators
+    }
+    this.condition = {
+      fields: this.filterFields,
+      operators: this.operators,
+      selected_field: 'name',
+      selected_operator: 'equals',
+      // selectItem: true,
+      stringValue: '',
+      numberValue: {
+        value1: '0',
+        value2: '1'
+      },
+      // multiSelectSelected: [],
+      fixedvalue: ''
+    }; // model for a single filter
+
+  }
 
   ngOnInit() {
 
     this.addFilter();
-
+    this.getCompanySuccessData();
     this.loading = true;
-    this.subscriptions.add(this.input.valueChanges.pipe(debounceTime(1500),distinctUntilChanged()
-      ,switchMap(data => {
+    this.subscriptions.add(this.input.valueChanges.pipe(debounceTime(1500), distinctUntilChanged()
+      , switchMap(data => {
         super.searchData();
         return this.searchData();
       }))
@@ -211,7 +201,7 @@ export class SuccessRateComponent extends Datatable implements OnInit {
     this.adminService.getSavedFilters().subscribe(filters => {
       this.savedFilters = filters;
     })
-  
+
   }
 
   ngAfterViewInit() {
@@ -219,113 +209,54 @@ export class SuccessRateComponent extends Datatable implements OnInit {
       .then((data) => {
         this.scriptLoaded = true;
       }).catch((error) => {
-      console.log('Script not loaded', error);
-    });
+        console.log('Script not loaded', error);
+      });
   }
 
-  
+
   addFilter() {
-    this.filters.push(JSON.parse(JSON.stringify(this.filter))); // passing filter by value
+    this.conditions.push(JSON.parse(JSON.stringify(this.condition))); // passing filter by value
     this.filtersPostData.push({}); // initialize an empty request object
   }
 
-  removeFilter(index) {
-    this.filters[index].visible = false;
-    this.filtersPostData[index] = {};
-  }
+ 
 
-  onSavedFilterChange() {
-    let filter = JSON.parse(this.currentSelectedFilter.filter_string);
-    this.filters = [];
-    filter.forEach((value, index) => {
-      this.addFilter();
-      this.filters[index].selected_property = value.property;
-      this.filters[index].select_property_category = value.type;
-      this.filters[index].selected_operator = value.operator;
-
-      //set post data
-      this.filtersPostData[index]['property'] = value.property;
-      this.filtersPostData[index]['type'] = value.type;
-      this.filtersPostData[index]['operator'] = value.operator;
-    });
-    this.showAdvancedFilter = true;
-  }
-
-  setFilterProperty(target, index) {
-    this.filtersPostData[index]['property'] = this.filters[index].selected_property;
-    let type = target.options[target.options.selectedIndex].className;
-    this.filtersPostData[index]['type'] = type;
-    this.filters[index].selected_property_type = type;
-
-    this.filters[index].selected_operator = ''; // reset operator value
-  }
-
-  setFilterOperator(value, index) {
-    this.filtersPostData[index]['operator'] = value;
-    this.filters[index].selected_operator = value;
-  }
-
-  setFilterValue(value, index) {
-    this.filtersPostData[index]['value'] = [];
-    this.filtersPostData[index]['value'][0] = value;
-  }
-
-  setDateStart(date: any, index) {
-    this.filtersPostData[index]['value'] = [];
-    this.filtersPostData[index]['value'][0] = date.start_date;
-  }
-
-  setDateRange(date: any, index) {
-    this.filtersPostData[index]['value'] = [];
-    this.filtersPostData[index]['value'][0] = date.start_date;
-    this.filtersPostData[index]['value'][1] = date.end_date;
-  }
-
-  getRequestParams(): any {
-    return {
-      limit: this.current_limit,
-      page: this.current_page - 1,
-      search_key: this.search,
-      sort_order: this.sortOrder,
-      sort_key: this.sortKey,
-      filter: this.parseFilterData()
-    };
-  }
+ 
 
   addCondition() {
-    this.filters.push(JSON.parse(JSON.stringify(this.filter)));
+    this.conditions.push(JSON.parse(JSON.stringify(this.condition)));
   }
 
-  
-
-  parseFilterData() {
-    // filter empty objects
-    let filteredData = this.filtersPostData.filter(value =>
-      value.property && value.type && value.operator && value.value);
-
-    // group by types - {app:[],company:[]}
-    let groupedByData = {};
-    for (let i = 0; i < filteredData.length; i++) {
-      let current = filteredData[i];
-
-      if (groupedByData[current.type] === undefined) {
-        groupedByData[current.type] = [];
-      }
-      groupedByData[filteredData[i].type].push(current);
-    }
-
-    return groupedByData;
+  removeCondition(index: number) {
+    this.conditions.splice(index, 1);
   }
 
-  filterResults() {
-    super.searchData();
-    this.getCompanySuccessData();
-  }
 
-  getCompanySuccessData() {
+
+
+  getCompanySuccessData(query = null) {
     this.loading = true;
+    const data = {
+      limit: this.current_limit,
+      page: this.current_page - 1,
+      query: null
+    };
 
-    this.subscriptions.add(this.adminService.getCompanySuccessRate(this.getRequestParams())
+
+    if (query) {
+      const que = query.map(q => ({
+        selected_field: q.selected_field,
+        selected_operator: q.selected_operator,
+        stringValue: q.stringValue,
+        numberValue: q.numberValue,
+        multiSelectSelected: q.multiSelectSelected,
+        fixedvalue: q.fixedvalue
+      }));
+      data.query = que;
+    }
+    
+
+    this.subscriptions.add(this.adminService.getCompanySuccessRate(data)
       .subscribe((response) => {
         this.updateCompanySuccessRate(response);
       }, err => this.loading = false));
@@ -353,31 +284,16 @@ export class SuccessRateComponent extends Datatable implements OnInit {
     company.showDetails = !company.showDetails;
   }
 
- 
+
   updateCompanySuccessRate(response: any) {
+    console.log(">>>>>>>Datamine", response)
     this.company = response.successRate;
-    this.totalCount=response.count;
+    this.totalCount = response.count;
     this.total_pages = Math.ceil(response.count / this.current_limit);
     this.loading = false;
   }
 
-  saveFilter(filterName, filterDescription) {
-    let filteredData = this.filtersPostData.filter(value => {
-      return !(Object.keys(value).length === 0);
-    });
-
-    let postData = {
-      name: filterName.value,
-      description: filterDescription.value,
-      filterString: JSON.stringify(filteredData)
-    };
-    this.adminService.saveSuccessRateFilter(postData).subscribe(response => {
-      jQuery("#saveFilterModal").modal("hide");
-      filterName.value = '';
-      filterDescription.value = '';
-    });
-  }
-
+  
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
@@ -420,25 +336,40 @@ export class SuccessRateComponent extends Datatable implements OnInit {
   }
 
 
-  searchData() {
+  searchData(query = null) {
+
     this.loading = true;
+    const data = {
+      limit: this.current_limit,
+      page: this.current_page - 1,
+      query: null
+    };
+    if (query) {
+      const que = query.map(q => ({
+        selected_field: q.selected_field,
+        selected_operator: q.selected_operator,
+        stringValue: q.stringValue,
+        numberValue: q.numberValue,
+        multiSelectSelected: q.multiSelectSelected,
+        fixedvalue: q.fixedvalue
+      }));
+      data.query = que;
+    }
     super.searchData();
-    return this.adminService.getCompanySuccessRate(this.getRequestParams());
+    return this.adminService.getCompanySuccessRate(data);
   }
 
-  removeCondition(index: number) {
-    this.filters.splice(index, 1);
-  }
+
   applyFilter() {
-    this.searchData();
-    this.getCompanySuccessData();
-    
+    this.searchData(this.conditions);
+    this.getCompanySuccessData(this.conditions);
+
   }
   showFilters() {
     this.showFilter = !this.showFilter;
-    this.filters = [];
-    this.filters.push(JSON.parse(JSON.stringify(this.filter)));
-    console.log("asss",this.filters)
+    this.conditions = [];
+    this.conditions.push(JSON.parse(JSON.stringify(this.condition)));
+    console.log("asss", this.filters)
   }
 
   initDatePcker(pos: number) {
@@ -449,24 +380,24 @@ export class SuccessRateComponent extends Datatable implements OnInit {
       'drops': 'down',
       'autoApply': true,
     };
-    if (this.filters[pos].selected_field === 'sign_up' || this.filters[pos].selected_field === 'subscription_updated') {
-      this.filters[pos].numberValue = {
+    if (this.conditions[pos].selected_field ===  'last_lead.last_added' || this.conditions[pos].selected_field === 'createdAt' || this.conditions[pos].selected_field === 'billing.subscription.end' || this.conditions[pos].selected_field === 'updatedAt' ) {
+      this.conditions[pos].numberValue = {
         value1: moment(new Date()).subtract(1, 'days').format('MM/DD/YYYY'),
         value2: moment(new Date()).format('MM/DD/YYYY')
       };
-      if (this.filters[pos].selected_operator !== 'between') {
+      if (this.conditions[pos].selected_operator !== 'between') {
         obj['singleDatePicker'] = true;
       }
       setTimeout(() => {
         jQuery('.dpkr_' + pos).daterangepicker(obj, (start, end, label) => {
-          this.filters[pos].numberValue = {
+          this.conditions[pos].numberValue = {
             value1: start.format('MM/DD/YYYY'),
             value2: end.format('MM/DD/YYYY')
           };
         });
       }, 1000);
     } else {
-      this.filters[pos].numberValue = {
+      this.conditions[pos].numberValue = {
         value1: '0',
         value2: '1'
       };

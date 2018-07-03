@@ -13,67 +13,52 @@
         </button>
       </div>
       <div class="col-lg-12 block mt-1" *ngIf="showFilter">
-        <div class="row mb-1" *ngFor="let filter of filters; let i = index">
+        <div class="row mb-1" *ngFor="let condition of conditions; let i = index">
           <div class="col-lg-1">
-            <button class="btn btn-danger btn-xs" (click)="removeCondition(i)" [disabled]="filters.length == 1">
+            <button class="btn btn-danger btn-xs" (click)="removeCondition(i)" [disabled]="conditions.length == 1">
               <i class="fa fa-minus"></i>
             </button>
           </div>
           <div class="col-lg-3">
-            <select class="form-control" [(ngModel)]="filters[i].selected_property" (change)="setFilterProperty($event.target,i)" title="Select Operators"
+            <select class="form-control" [(ngModel)]="condition.selected_field" (change)="condition.stringValue = ''; condition.multiSelectSelected = []; initDatePcker(i)"
               style="float:left;margin: 8px">
               <optgroup label="Company">
-                <option *ngFor="let prop of filter.company" class="company" value="{{prop.value}}">{{prop.name}}</option>
+                <option *ngFor="let prop of condition.fields.company" class="company" value="{{prop.value}}">{{prop.name}}</option>
               </optgroup>
               <optgroup label="App">
-                <option *ngFor="let prop of filter.app" class="app" value="{{prop.value}}">{{prop.name}}</option>
+                <option *ngFor="let prop of condition.fields.app" class="app" value="{{prop.value}}">{{prop.name}}</option>
               </optgroup>
               <optgroup label="User">
-                <option *ngFor="let prop of filter.user" class="user" value="{{prop.value}}">{{prop.name}}</option>
+                <option *ngFor="let prop of condition.fields.user" class="user" value="{{prop.value}}">{{prop.name}}</option>
               </optgroup>
             </select>
           </div>
+        
 
-          <!-- <div class="col-lg-3">
-                  <select class="form-control" [(ngModel)]="filter.selected_operator" (change)="initDatePcker(i)">
-                    <option *ngFor="let operator of filter.operators[filter.selected_field]; let i = index" value="{{operator}}">{{operator}}</option>
-                  </select>
-                </div> -->
           <div class="col-lg-3" style="margin-top: 8px">
-            <select class="form-control" [(ngModel)]="filters[i].selected_operator" (change)="setFilterOperator($event.target.value,i)" title="Select Operators">
-              <option style="display: none"></option>
-              <option *ngFor="let operator of filter.operators[filter.selected_property]" [value]="operator">
-                {{operator}}
-              </option>
+            <select class="form-control" [(ngModel)]="condition.selected_operator" (change)="initDatePcker(i)">
+              <option *ngFor="let operator of condition.operators[condition.selected_field]; let i = index" value="{{operator}}">{{operator}}</option>
             </select>
           </div>
-          <div *ngIf="(filter.types[filter.selected_property]==='date')" style="display: inline-block">
+          <div class="col-lg-3" style="margin-top: 8px">
 
-            <!-- <og-date-picker *ngIf="scriptLoaded && !(filter.selected_operator==='between')"
-                           style="position:absolute;bottom:0" (date)="setDateStart($event,i)">
-           </og-date-picker>
+            <input type="text" *ngIf="['name','billing.subscription.billing_unit',
+            'billing.chargebee_plan_id','status','billing.chargebee_subscription_status'].includes(condition.selected_field)" class="form-control" [(ngModel)]="condition.stringValue"
+            />
 
-           <og-date-range-picker *ngIf="scriptLoaded && filter.selected_operator==='between'"
-                                 style="position:absolute;bottom:0"
-                                 (date)="setDateRange($event,i)">
-           </og-date-range-picker> -->
+            <input type="text" *ngIf="['current_usage.calc','current_usage.total_conversion_rate', 'current_usage.total_leads','current_usage.total_traffic','billing.subscription.percent_cycle_over','session_count'].includes(condition.selected_field)"
+              class="form-control" [(ngModel)]="condition.numberValue.value1" />
+
+            <input type="text" *ngIf="['last_lead.last_added','createdAt', 'billing.subscription.end','updatedAt'].includes(condition.selected_field)"
+              class="form-control {{'dpkr_' + i}}" [(ngModel)]="condition.numberValue.value1" />
+            <input type="text" *ngIf="condition.selected_operator == 'between' && ['current_usage.calc','current_usage.total_conversion_rate', 'current_usage.total_leads','current_usage.total_traffic','billing.subscription.percent_cycle_over','session_count'].includes(condition.selected_field)"
+              class="form-control" [(ngModel)]="condition.numberValue.value2" />
           </div>
-                <div class="col-lg-3"
-                *ngIf="filter.types[filter.selected_property]!='date' && filter.types[filter.selected_property]!='bool'"
-                style="display: inline-block;margin-top: 8px">
-                <input class="form-control" type="text" title="Enter value" (change)="setFilterValue($event.target.value,i)">
-                <input class="form-control"*ngIf="filter.selected_operator==='between'" title="Enter value"
-                       type="number" (change)="filtersPostData[i]['value'][1]=$event.target.value;">
-              </div>
-          <div  class="col-lg-2"  *ngIf="filter.selected_property=='appsumo_created' || filter.selected_property=='cancelled'" style="display: inline-block">
-
-            <select class="form-control" (change)="setFilterValue($event.target.value,i)" title="Select" style="margin-top: 8px">
-              <option style="display: none"></option>
-              <option>true</option>
-              <option>false</option>
+          <div *ngIf="['is_appsumo_created', 'cancellation.cancelled_by_user'].includes(condition.selected_field)">
+            <select class="form-control" [(ngModel)]="condition.selected_operator">
+              <option *ngFor="let operator of condition.operators[condition.selected_field]; let i = index" value="{{operator}}">{{operator}}</option>
             </select>
           </div>
-
         </div>
 
         <div class="row mt-2">
@@ -86,16 +71,13 @@
             <button class="btn btn-success" (click)="applyFilter()">
               Apply Filter
             </button>&nbsp;&nbsp;
-            <button type="button" data-toggle="modal" data-target="#saveFilterModal" class="btn btn-info">
-                Save Filter
-              </button>
           </div>
         </div>
 
       </div>
 
-    
-      <div class="col-lg-12">
+
+      <div class="col-lg-12" *ngIf="totalCompanies">
         <div class="text-right">
           Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit)
           > totalCount)? totalCount: current_page * current_limit}} of {{totalCount}}
@@ -168,7 +150,7 @@
                 </tr>
               </thead>
               <tbody *ngFor="let company of company">
-                <ng-container  *ngIf="!loading">
+                <ng-container *ngIf="!loading">
                   <tr>
                     <td>
                       <a href="javascript:void(0);" (click)="toggleCompanyDetails(company)">{{company.name}}</a>
@@ -202,7 +184,7 @@
                     <td>
                       <a [routerLink]="['/admin/company',company._id]">
                         <i class="fa fa-edit" style="font-size: 22px;" data-original-title="Edit">
-                         </i>
+                        </i>
                       </a>
                     </td>
                   </tr>
@@ -213,12 +195,12 @@
                   </tr>
                 </ng-container>
                 <ng-container *ngIf="!loading && totalCount== 0">
-                      <tr>
-                        <th colspan="6" scope="row" class="text-center">
-                          No record found
-                        </th>
-                      </tr>
-                    </ng-container>
+                  <tr>
+                    <th colspan="6" scope="row" class="text-center">
+                      No record found
+                    </th>
+                  </tr>
+                </ng-container>
                 <ng-container *ngIf="loading">
                   <tr>
                     <th colspan="6" scope="row" class="text-center">
@@ -231,7 +213,7 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-12">
+      <div class="col-lg-12" *ngIf="totalCompanies">
         <div class="text-right">
           Showing {{(current_page == 1) ? current_page : ((current_page - 1) * current_limit) + 1}} - {{((current_page * current_limit)
           > totalCount)? totalCount: current_page * current_limit}} of {{totalCount}}
